@@ -1,0 +1,13 @@
+﻿{
+    "connectionString": "mongodb://localhost:27017/qr-attendance",
+    "secret": "35866ccd-26b8-4ac9-82c7-3e4ad02d07e9",
+    "emailFrom": "noreply@qr-attendance.com",
+    "smtpOptions": {
+        "host": "smtp.ethereal.email",
+        "port": 587,
+        "auth": {
+            "user": "carmela.hansen5@ethereal.email",
+            "pass": "JhujFQgtWHYanHZ87A"
+        }
+    }
+}
