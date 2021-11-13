@@ -1,2 +1,2 @@
 # qr-attendance
-https://trello.com/b/avmDl7xc/qr-attendance
+https://10inc.atlassian.net/jira/software/projects/QRA/boards/1
