@@ -68,5 +68,3 @@ async function email_qr(id) {
         ]
     });
 }
-// TODO: Generate QR
-//  -- existing helper to send email (build email wih QR and send)

@@ -1,4 +1,7 @@
 ﻿const db = require('_helpers/db');
+const studentService = require('students/student.service');
+const sendEmail = require('_helpers/send-email');
+const createPdf = require('_helpers/create-pdf');
 
 module.exports = {
     getAll,
@@ -45,18 +48,28 @@ async function _delete(id) {
 async function attend(id, student_id) {
     const event = await db.Event.findById(id);
 
-    if (event.attendees.includes(student_id)) {
-        throw 'Student is already an attendee';
-    }
+    // if (event.attendees.includes(student_id)) {
+    //     throw 'Student is already an attendee';
+    // }
 
     event.attendees.push(student_id)
     await event.save();
 
+    student = await studentService.getById(student_id)
+    eventPdf = await createPdf.eventParticipation(event, student)
+    message = `<p>Attached is Student ${student.name}'s Certificate of Participation for Event ${event.name}:</p>`;
+    await sendEmail({
+        to: student.email,
+        subject: `Student ${student.name} Certificate of Participation`,
+        html: message,
+        attachments: [
+            {
+                filename: `certificate-for-${event.id}.pdf`,
+                content: eventPdf,
+                contentType: 'application/pdf'
+            }
+        ]
+    });
+
     return event;
 }
-
-
-// TODO: ON SCAN, ADD ATTENDEE
-//  -- send shit below
-// TODO: SEND CERTIFICATE (PDF)
-// TODO: GENERATE PDF

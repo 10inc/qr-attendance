@@ -23,6 +23,7 @@
         "mongodb": "^3.5.7",
         "mongoose": "^5.9.25",
         "nodemailer": "^6.4.6",
+        "pdfkit": "^0.13.0",
         "qrcode": "^1.4.4",
         "rootpath": "^0.1.2",
         "swagger-ui-express": "^4.1.4",

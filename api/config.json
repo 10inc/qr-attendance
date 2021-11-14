@@ -3,11 +3,11 @@
     "secret": "35866ccd-26b8-4ac9-82c7-3e4ad02d07e9",
     "emailFrom": "noreply@qr-attendance.com",
     "smtpOptions": {
-        "host": "smtp.ethereal.email",
-        "port": 587,
+        "host": "smtp.mailtrap.io",
+        "port": 2525,
         "auth": {
-            "user": "carmela.hansen5@ethereal.email",
-            "pass": "JhujFQgtWHYanHZ87A"
+            "user": "4e4aa2deea4a8b",
+            "pass": "9c6a2d777e5238"
         }
     }
 }
