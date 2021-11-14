@@ -47,7 +47,6 @@ async function _delete(id) {
 
 async function email_qr(id) {
     student = await getById(id)
-    console.log("WWWWWWWWWWW", student)
     message = `<p>Attached is Student ${student.name}'s QR Code:</p>`;
     img = await QRCode.toDataURL(id);
 

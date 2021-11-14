@@ -2,18 +2,33 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 var QRCode = require('qrcode.react');
 
-import { studentService } from '@/_services';
+import { studentService, alertService } from '@/_services';
 
 function Details({ match }) {
     console.log(match)
-    const { path, params:{ id } } = match
+    const { params:{ id } } = match
     const [student, setStudent] = useState({});
+    const [isSubmitting, setSubmitting] = useState(false);
 
     useEffect(() => {
         studentService.getById(id).then(result => {
             setStudent(result)
         })
     }, []);
+
+    function emailQr() {
+        setSubmitting(true)
+        studentService.emailQr(id)
+            .then(result => {
+                alertService.success(result.message);
+                console.log(result)
+                setSubmitting(false)
+            })
+            .catch(error => {
+                alertService.error("Something went wrong with sending the email");
+                setSubmitting(false)
+            })
+    }
 
     return (
         <div>
@@ -33,6 +48,14 @@ function Details({ match }) {
             <p>
                 <QRCode value={`${id}`} />
             </p>
+            <button
+                className="btn btn-sm btn-primary ml-1"
+                onClick={emailQr}
+                disabled={isSubmitting || !id}
+            >
+                {isSubmitting && <span className="spinner-border spinner-border-sm mr-1"></span>}
+                Send QR to Student Email
+            </button>
         </div>
     );
 }

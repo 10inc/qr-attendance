@@ -8,6 +8,7 @@ function Details({ match }) {
     const [event, setEvent] = useState({});
     const [students, setStudents] = useState([]);
     const [attendee, setAttendee] = useState('');
+    const [isSubmitting, setSubmitting] = useState(false);
 
     useEffect(() => {
         eventService.getById(id).then(result => setEvent(result));
@@ -15,13 +16,16 @@ function Details({ match }) {
     }, []);
 
     function attendEvent() {
+        setSubmitting(true)
         eventService.attend(id, attendee)
             .then(() => {
                 eventService.getById(id).then(result => setEvent(result));
                 alertService.success("Successfully added a Student as an Event Attendee");
+                setSubmitting(false)
             })
             .catch(error => {
                 alertService.error(error);
+                setSubmitting(false)
             });
     }
 
@@ -57,8 +61,9 @@ function Details({ match }) {
             <button
                 className="btn btn-sm btn-primary ml-1"
                 onClick={() => attendEvent()}
-                disabled={!attendee}
+                disabled={isSubmitting || !attendee}
             >
+                {isSubmitting && <span className="spinner-border spinner-border-sm mr-1"></span>}
                 Submit
             </button>
         </div>

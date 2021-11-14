@@ -13,7 +13,8 @@ export const studentService = {
     update,
     delete: _delete,
     student: studentSubject.asObservable(),
-    get studentValue () { return studentSubject.value }
+    get studentValue () { return studentSubject.value },
+    emailQr
 };
 
 // TODO: Can be a generic CRUD service
@@ -35,4 +36,10 @@ function update(id, params) {
 
 function _delete(id) {
     return fetchWrapper.delete(`${baseUrl}/${id}`);
+}
+
+// Other
+
+function emailQr(id) {
+    return fetchWrapper.post(`${baseUrl}/${id}/qr`, {});
 }
