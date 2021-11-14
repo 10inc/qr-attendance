@@ -84,10 +84,12 @@ function AddEdit({ history, match }) {
                 return (
                     <Form>
                         <h1>{isAddMode ? 'Add User' : 'Edit User'}</h1>
-                        <div className="form-group col-7">
-                            <label>Name</label>
-                            <Field name="name" type="text" className={'form-control' + (errors.name && touched.name ? ' is-invalid' : '')} />
-                            <ErrorMessage name="name" component="div" className="invalid-feedback" />
+                        <div className="form-row">
+                            <div className="form-group col">
+                                <label>Name</label>
+                                <Field name="name" type="text" className={'form-control' + (errors.name && touched.name ? ' is-invalid' : '')} />
+                                <ErrorMessage name="name" component="div" className="invalid-feedback" />
+                            </div>
                         </div>
 
                         <div className="form-row">

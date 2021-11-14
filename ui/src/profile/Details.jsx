@@ -12,7 +12,8 @@ function Details({ match }) {
             <h1>My Profile</h1>
             <p>
                 <strong>Name: </strong> {user.name}<br />
-                <strong>Email: </strong> {user.email}
+                <strong>Email: </strong> {user.email}<br />
+                <strong>Role: </strong> {user.role}
             </p>
             <p><Link to={`${path}/update`}>Update Profile</Link></p>
         </div>

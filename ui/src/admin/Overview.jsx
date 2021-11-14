@@ -9,6 +9,8 @@ function Overview({ match }) {
             <h1>Admin</h1>
             <p>This section can only be accessed by administrators.</p>
             <p><Link to={`${path}/users`}>Manage Users</Link></p>
+            <p><Link to={`${path}/students`}>Manage Students</Link></p>
+            <p><Link to={`${path}/events`}>Manage Events</Link></p>
         </div>
     );
 }

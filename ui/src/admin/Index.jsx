@@ -3,6 +3,8 @@ import { Route, Switch } from 'react-router-dom';
 
 import { Overview } from './Overview';
 import { Users } from './users';
+import { Students } from './students';
+import { Events } from './events';
 
 function Admin({ match }) {
     const { path } = match;
@@ -13,6 +15,8 @@ function Admin({ match }) {
                 <Switch>
                     <Route exact path={path} component={Overview} />
                     <Route path={`${path}/users`} component={Users} />
+                    <Route path={`${path}/students`} component={Students} />
+                    <Route path={`${path}/events`} component={Events} />
                 </Switch>
             </div>
         </div>

@@ -39,6 +39,8 @@ function AdminNav({ match }) {
         <nav className="admin-nav navbar navbar-expand navbar-light">
             <div className="navbar-nav">
                 <NavLink to={`${path}/users`} className="nav-item nav-link">Users</NavLink>
+                <NavLink to={`${path}/students`} className="nav-item nav-link">Students</NavLink>
+                <NavLink to={`${path}/events`} className="nav-item nav-link">Events</NavLink>
             </div>
         </nav>
     );
