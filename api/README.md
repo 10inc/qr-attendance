@@ -10,3 +10,7 @@
 # Run the app
 - npm ci
 - npm run start:dev
+
+# Tech Debt
+- separate routes
+- separate schemas

@@ -5,9 +5,13 @@ mongoose.connect(process.env.MONGODB_URI || config.connectionString, connectionO
 mongoose.Promise = global.Promise;
 
 module.exports = {
+    // Accounts
     Account: require('accounts/account.model'),
     RefreshToken: require('accounts/refresh-token.model'),
-    isValidId
+    isValidId,
+    // Other
+    Student: require('students/student.model'),
+    Event: require('events/event.model')
 };
 
 function isValidId(id) {
