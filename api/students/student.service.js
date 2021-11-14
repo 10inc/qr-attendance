@@ -58,7 +58,14 @@ async function email_qr(id) {
             <p>
                 <img src="${img}">
             </p>
-        `
+        `,
+        attachments: [
+            {
+                filename: `qr-${student.id}.jpg`,
+                content: img.split("base64,")[1],
+                encoding: 'base64'
+            }
+        ]
     });
 }
 // TODO: Generate QR

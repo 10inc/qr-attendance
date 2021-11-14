@@ -5,7 +5,6 @@ var QRCode = require('qrcode.react');
 import { studentService, alertService } from '@/_services';
 
 function Details({ match }) {
-    console.log(match)
     const { params:{ id } } = match
     const [student, setStudent] = useState({});
     const [isSubmitting, setSubmitting] = useState(false);
@@ -21,7 +20,6 @@ function Details({ match }) {
         studentService.emailQr(id)
             .then(result => {
                 alertService.success(result.message);
-                console.log(result)
                 setSubmitting(false)
             })
             .catch(error => {
