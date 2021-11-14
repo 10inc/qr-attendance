@@ -18,6 +18,9 @@ function AddEdit({ history, match }) {
     const validationSchema = Yup.object().shape({
         name: Yup.string()
             .required('Name is required'),
+        email: Yup.string()
+            .email('Email is invalid')
+            .required('Email is required'),
         section: Yup.string()
             .required('Section is required'),
         year: Yup.string()
@@ -77,6 +80,12 @@ function AddEdit({ history, match }) {
                             <label>Name</label>
                             <Field name="name" type="text" className={'form-control' + (errors.name && touched.name ? ' is-invalid' : '')} />
                             <ErrorMessage name="name" component="div" className="invalid-feedback" />
+                        </div>
+
+                        <div className="form-group col-7">
+                            <label>Email</label>
+                            <Field name="email" type="text" className={'form-control' + (errors.email && touched.email ? ' is-invalid' : '')} />
+                            <ErrorMessage name="email" component="div" className="invalid-feedback" />
                         </div>
 
                         <div className="form-group col-7">

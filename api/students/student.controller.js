@@ -49,6 +49,7 @@ function _delete(req, res, next) {
 function createSchema(req, res, next) {
     const schema = Joi.object({
         name: Joi.string().required(),
+        email: Joi.string().email().required(),
         section: Joi.string().required(),
         year: Joi.string().required()
     });
@@ -58,6 +59,7 @@ function createSchema(req, res, next) {
 function updateSchema(req, res, next) {
     const schemaRules = {
         name: Joi.string().empty(''),
+        email: Joi.string().email().empty(''),
         section: Joi.string().empty(''),
         year: Joi.string().empty('')
     };
