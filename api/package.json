@@ -5,7 +5,7 @@
     "license": "MIT",
     "repository": {
         "type": "git",
-        "url": "https://github.com/cornflourblue/node-mongo-signup-verification-api.git"
+        "url": "https://github.com/10inc/qr-attendance"
     },
     "scripts": {
         "start": "node ./server.js",
