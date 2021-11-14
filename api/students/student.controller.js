@@ -12,9 +12,11 @@ router.get('/:id', authorize([Role.Admin, Role.Organizer]), getById);
 router.post('/', authorize(Role.Admin), createSchema, create);
 router.put('/:id', authorize(Role.Admin), updateSchema, update);
 router.delete('/:id', authorize(Role.Admin), _delete);
+router.post('/:id/qr', authorize(Role.Admin), email_qr);
 
 module.exports = router;
 
+// CRUD
 function getAll(req, res, next) {
     service.getAll()
         .then(students => res.json(students))
@@ -42,6 +44,14 @@ function update(req, res, next) {
 function _delete(req, res, next) {
     service.delete(req.params.id)
         .then(() => res.json({ message: 'Student deleted successfully' }))
+        .catch(next);
+}
+
+// Other
+
+function email_qr(req, res, next) {
+    service.email_qr(req.params.id)
+        .then(() => res.json({ message: 'Student QR Code email sent successfully' }))
         .catch(next);
 }
 

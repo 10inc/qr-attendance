@@ -1,11 +1,14 @@
 ﻿const db = require('_helpers/db');
+const sendEmail = require('_helpers/send-email');
+var QRCode = require('qrcode')
 
 module.exports = {
     getAll,
     getById,
     create,
     update,
-    delete: _delete
+    delete: _delete,
+    email_qr
 };
 
 // CRUD
@@ -42,5 +45,22 @@ async function _delete(id) {
 
 // Other
 
+async function email_qr(id) {
+    student = await getById(id)
+    console.log("WWWWWWWWWWW", student)
+    message = `<p>Attached is Student ${student.name}'s QR Code:</p>`;
+    img = await QRCode.toDataURL(id);
+
+    await sendEmail({
+        to: student.email,
+        subject: `Student ${student.name} QR Code`,
+        html: `
+            ${message}
+            <p>
+                <img src="${img}">
+            </p>
+        `
+    });
+}
 // TODO: Generate QR
 //  -- existing helper to send email (build email wih QR and send)
