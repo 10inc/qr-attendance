@@ -40,7 +40,7 @@ function update(req, res, next) {
 }
 
 function _delete(req, res, next) {
-    studentService.delete(req.params.id)
+    service.delete(req.params.id)
         .then(() => res.json({ message: 'Student deleted successfully' }))
         .catch(next);
 }

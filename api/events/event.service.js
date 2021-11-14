@@ -5,7 +5,8 @@ module.exports = {
     getById,
     create,
     update,
-    delete: _delete
+    delete: _delete,
+    attend
 };
 
 // CRUD
@@ -39,3 +40,23 @@ async function _delete(id) {
     const event = await db.Event.findById(id);
     await event.remove();
 }
+
+// Other
+async function attend(id, student_id) {
+    const event = await db.Event.findById(id);
+
+    if (event.attendees.includes(student_id)) {
+        throw 'Student is already an attendee';
+    }
+
+    event.attendees.push(student_id)
+    await event.save();
+
+    return event;
+}
+
+
+// TODO: ON SCAN, ADD ATTENDEE
+//  -- send shit below
+// TODO: SEND CERTIFICATE (PDF)
+// TODO: GENERATE PDF

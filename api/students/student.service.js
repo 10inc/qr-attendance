@@ -39,3 +39,8 @@ async function _delete(id) {
     const student = await db.Student.findById(id);
     await student.remove();
 }
+
+// Other
+
+// TODO: Generate QR
+//  -- existing helper to send email (build email wih QR and send)

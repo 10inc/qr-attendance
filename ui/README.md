@@ -11,3 +11,7 @@
 
 # Tech Debt
 - Services general CRUD
+
+# TODO
+- Add moment for Event dates (empty value when updating)
+- Send QR Code to Student's email

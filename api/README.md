@@ -14,3 +14,4 @@
 # Tech Debt
 - separate routes
 - separate schemas
+- general service for CRUD

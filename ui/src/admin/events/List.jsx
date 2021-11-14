@@ -38,10 +38,11 @@ function List({ match }) {
                 <tbody>
                     {events && events.map(event =>
                         <tr key={event.id}>
-                            <td>{event.name}</td>
+                            <td><Link to={`${path}/${event.id}`}>{event.name}</Link></td>
                             <td>{event.date}</td>
                             <td>{event.attendees.length}</td>
                             <td style={{ whiteSpace: 'nowrap' }}>
+                                <Link to={`${path}/${event.id}`} className="btn btn-sm btn-success mr-1">Details</Link>
                                 <Link to={`${path}/edit/${event.id}`} className="btn btn-sm btn-primary mr-1">Edit</Link>
                                 <button onClick={() => deleteEvent(event.id)} className="btn btn-sm btn-danger" style={{ width: '60px' }} disabled={event.isDeleting}>
                                     {event.isDeleting

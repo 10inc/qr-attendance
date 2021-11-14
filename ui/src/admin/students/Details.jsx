@@ -25,13 +25,13 @@ function Details({ match }) {
                 <strong>Section: </strong> {student?.section}<br />
                 <strong>Year: </strong> {student?.year}
             </p>
-            <p><Link to={`${path}/update`}>Update Profile</Link></p>
+            <p><Link to={`edit/${id}`}>Update Profile</Link></p>
 
             <hr/>
 
             <h1>QR Code</h1>
             <p>
-                <QRCode value={`${student?.id}`} />
+                <QRCode value={`${id}`} />
             </p>
         </div>
     );

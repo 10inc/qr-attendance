@@ -12,9 +12,11 @@ router.get('/:id', authorize([Role.Admin, Role.Organizer]), getById);
 router.post('/', authorize([Role.Admin, Role.Organizer]), createSchema, create);
 router.put('/:id', authorize([Role.Admin, Role.Organizer]), updateSchema, update);
 router.delete('/:id', authorize([Role.Admin, Role.Organizer]), _delete);
+router.post('/:id/attend/:student_id', authorize([Role.Admin, Role.Organizer]), attend);
 
 module.exports = router;
 
+// CRUD
 function getAll(req, res, next) {
     service.getAll()
         .then(events => res.json(events))
@@ -40,8 +42,15 @@ function update(req, res, next) {
 }
 
 function _delete(req, res, next) {
-    eventService.delete(req.params.id)
+    service.delete(req.params.id)
         .then(() => res.json({ message: 'Event deleted successfully' }))
+        .catch(next);
+}
+
+// Other
+function attend(req, res, next) {
+    service.attend(req.params.id, req.params.student_id)
+        .then(() => res.json({ message: 'Student attended Event' }))
         .catch(next);
 }
 
