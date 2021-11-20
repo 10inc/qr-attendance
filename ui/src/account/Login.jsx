@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Formik, Field, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
+import '../../../ui/src/css/Login.css';
 
 import { accountService, alertService } from '@/_services';
 
@@ -34,7 +35,7 @@ function Login({ history, location }) {
     return (
         <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={onSubmit}>
             {({ errors, touched, isSubmitting }) => (
-                <Form>
+                <Form className="card">
                     <h3 className="card-header">Login</h3>
                     <div className="card-body">
                         <div className="form-group">

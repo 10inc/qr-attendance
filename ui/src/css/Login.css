@@ -1,0 +1,41 @@
+
+
+.card{
+    /*position: relative;*/
+    background: #fff;
+    padding: 20px;
+    display: flex;
+    border-radius: 20px 20px 20px 20px;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+    justify-content: space-between;
+    cursor: pointer;
+}
+
+.form-control:focus {
+    border-color: #009c85;
+    box-shadow: inset 0 1px 1px rgba(0, 156, 133, 1), 0 0 8px rgba(10, 99, 84, 1);
+}
+
+.btn-primary {
+    box-shadow: none;
+    background: #009c85 !important;
+    background-color: #009c85 !important;
+    text-decoration: none;
+    font-weight: 600;
+    color: #fff;
+    border-radius: 6px;
+    border-color: #009c85 !important;
+
+}
+
+.btn-primary:hover{
+    color: #0a6354;
+}
+
+.btn-link {
+    color: #009c85;
+}
+
+.btn-link:hover {
+    color: #0a6354;
+}
