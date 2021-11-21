@@ -12,7 +12,9 @@ module.exports = {
             inject: true,
             template: path.resolve(__dirname, 'src', 'index.html'),
         }),
-        new Dotenv()
+        new Dotenv({
+            systemvars: true
+        })
     ],
     module: {
         rules: [
