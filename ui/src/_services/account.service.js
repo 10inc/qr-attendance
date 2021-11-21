@@ -6,7 +6,7 @@ import { fetchWrapper, history } from '@/_helpers';
 const userSubject = new BehaviorSubject(null);
 
 const apiUrl = process.env.API_URL
-const baseUrl = apiUrl.substring(apiUrl.length - 1) == '/' ? 'accounts' : '/accounts';
+const baseUrl = apiUrl + apiUrl.substring(apiUrl.length - 1) == '/' ? 'accounts' : '/accounts';
 
 export const accountService = {
     login,
