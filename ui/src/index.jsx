@@ -10,7 +10,7 @@ import './styles.less';
 
 require('dotenv').config()
 
-if (process.env.IS_FAKE_BACKEND) {
+if (process.env.IS_FAKE_BACKEND == 'true') {
     // setup fake backend
     console.log("FAKE BACKEND ACTIVE")
     configureFakeBackend();
