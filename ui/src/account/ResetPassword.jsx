@@ -63,7 +63,7 @@ function ResetPassword({ history }) {
         return (
             <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={onSubmit}>
                 {({ errors, touched, isSubmitting }) => (
-                    <Form>
+                    <Form className="shadow">
                         <div className="form-group">
                             <label>Password</label>
                             <Field name="password" type="password" className={'form-control' + (errors.password && touched.password ? ' is-invalid' : '')} />

@@ -27,7 +27,7 @@ function ForgotPassword() {
     return (
         <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={onSubmit}>
             {({ errors, touched, isSubmitting }) => (
-                <Form>
+                <Form className="shadow">
                     <h3 className="card-header">Forgot Password</h3>
                     <div className="card-body">
                         <div className="form-group">
