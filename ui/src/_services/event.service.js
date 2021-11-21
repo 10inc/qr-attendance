@@ -4,7 +4,7 @@ import config from 'config';
 import { fetchWrapper } from '@/_helpers';
 
 const eventSubject = new BehaviorSubject(null);
-const baseUrl = `${config.apiUrl}/events`;
+const baseUrl = `${process.env.API_URL}/events`;
 
 export const eventService = {
     getAll,

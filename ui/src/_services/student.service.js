@@ -4,7 +4,7 @@ import config from 'config';
 import { fetchWrapper } from '@/_helpers';
 
 const studentSubject = new BehaviorSubject(null);
-const baseUrl = `${config.apiUrl}/students`;
+const baseUrl = `${process.env.API_URL}/students`;
 
 export const studentService = {
     getAll,

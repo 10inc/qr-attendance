@@ -130,7 +130,7 @@ export function configureFakeBackend() {
                     // first registered user is an admin
                     user.role = Role.Admin;
                 } else {
-                    user.role = Role.User;
+                    user.role = Role.Organizer;
                 }
                 user.dateCreated = new Date().toISOString();
                 user.verificationToken = new Date().getTime().toString();
