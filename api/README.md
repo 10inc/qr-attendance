@@ -9,7 +9,7 @@
 
 # Run the app
 - npm ci
-- npm run start:dev
+- npm run dev
 
 # Tech Debt
 - separate routes
