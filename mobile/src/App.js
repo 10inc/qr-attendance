@@ -15,7 +15,7 @@ import {
 } from 'react-router-native';
 
 import {AuthProvider, useAuth} from './auth';
-import {Login, Dashboard} from './views';
+import {Login, Dashboard, Event} from './views';
 
 const Main = () => {
   return (
@@ -24,6 +24,7 @@ const Main = () => {
         <Route path="/login" element={<Login />} />
         <Route element={<RequireAuth />}>
           <Route path="/" element={<Dashboard />} />
+          <Route path="/event" element={<Event />} />
         </Route>
       </Routes>
     </NativeRouter>
@@ -34,7 +35,7 @@ function RequireAuth() {
   let context = useAuth();
   let location = useLocation();
 
-  if (context.status !== 'signIn') {
+  if (!context?.userToken) {
     return <Navigate to="/login" state={{from: location}} />;
   }
 

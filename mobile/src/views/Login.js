@@ -22,10 +22,11 @@ const Login = () => {
 
   // Tech Debt: useContext and useMemo should re-render... this is a quick fix
   React.useEffect(() => {
-    if (status === 'signIn') {
+    console.log('login', userToken);
+    if (userToken) {
       navigate('/');
     }
-  }, [status, navigate]);
+  }, [userToken, navigate]);
 
   return (
     <View>

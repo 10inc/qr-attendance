@@ -1,8 +1,6 @@
 import {getToken, removeUser} from '../auth/async-storage';
 import {API_URL} from '@env';
 
-const TOKEN = getToken();
-
 export const fetchWrapper = {
   get,
   post,
@@ -13,46 +11,55 @@ export const fetchWrapper = {
 function get(url) {
   const requestOptions = {
     method: 'GET',
-    headers: authHeader(url),
   };
-  return fetch(url, requestOptions).then(handleResponse);
+  return fetchUrl(url, requestOptions);
 }
 
 function post(url, body) {
   const requestOptions = {
     method: 'POST',
-    headers: {'Content-Type': 'application/json', ...authHeader(url)},
+    headers: {'Content-Type': 'application/json'},
     credentials: 'include',
     body: JSON.stringify(body),
   };
-  return fetch(url, requestOptions).then(handleResponse);
+  return fetchUrl(url, requestOptions);
 }
 
 function put(url, body) {
   const requestOptions = {
     method: 'PUT',
-    headers: {'Content-Type': 'application/json', ...authHeader(url)},
+    headers: {'Content-Type': 'application/json'},
     body: JSON.stringify(body),
   };
-  return fetch(url, requestOptions).then(handleResponse);
+  return fetchUrl(url, requestOptions);
 }
 
 // prefixed with underscored because delete is a reserved word in javascript
 function _delete(url) {
   const requestOptions = {
     method: 'DELETE',
-    headers: authHeader(url),
   };
-  return fetch(url, requestOptions).then(handleResponse);
+  return fetchUrl(url, requestOptions);
 }
 
 // helper functions
 
-function authHeader(url) {
+async function fetchUrl(url, requestOptions) {
+  let headers = requestOptions?.headers;
+  const TOKEN = await getToken();
+
+  requestOptions.headers = {...headers, ...authHeader(url, TOKEN)};
+
+  return fetch(url, requestOptions).then(handleResponse);
+}
+
+function authHeader(url, token) {
   // return auth header with jwt if user is logged in and request is to the api url
   const isApiUrl = url.startsWith(API_URL);
-  if (TOKEN && isApiUrl) {
-    return {Authorization: `Bearer ${TOKEN}`};
+
+  if (token && isApiUrl) {
+    console.log('in header', token);
+    return {Authorization: `Bearer ${token}`};
   } else {
     return {};
   }
@@ -63,7 +70,7 @@ function handleResponse(response) {
     const data = text && JSON.parse(text);
 
     if (!response.ok) {
-      if ([401, 403].includes(response.status) && TOKEN) {
+      if ([401, 403].includes(response.status)) {
         // auto logout if 401 Unauthorized or 403 Forbidden response returned from api
         removeUser();
       }
