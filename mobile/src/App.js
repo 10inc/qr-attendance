@@ -5,7 +5,14 @@ import {
   initialWindowMetrics,
   SafeAreaProvider,
 } from 'react-native-safe-area-context';
-import {NativeRouter, Route, Redirect} from 'react-router-native';
+import {
+  NativeRouter,
+  Route,
+  Navigate,
+  Routes,
+  Outlet,
+  useLocation,
+} from 'react-router-native';
 
 import {AuthProvider, useAuth} from './auth';
 import {Login, Dashboard} from './views';
@@ -13,32 +20,26 @@ import {Login, Dashboard} from './views';
 const Main = () => {
   return (
     <NativeRouter>
-      <PrivateRoute exact path="/" component={Dashboard} />
-      <Route path="/login" component={Login} />
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route element={<RequireAuth />}>
+          <Route path="/" element={<Dashboard />} />
+        </Route>
+      </Routes>
     </NativeRouter>
   );
 };
 
-const PrivateRoute = ({children, ...rest}) => {
-  const {isLoggedIn} = useAuth();
-  return (
-    <Route
-      {...rest}
-      render={({location}) =>
-        isLoggedIn ? (
-          children
-        ) : (
-          <Redirect
-            to={{
-              pathname: '/login',
-              state: {from: location},
-            }}
-          />
-        )
-      }
-    />
-  );
-};
+function RequireAuth() {
+  let context = useAuth();
+  let location = useLocation();
+
+  if (context.status !== 'signIn') {
+    return <Navigate to="/login" state={{from: location}} />;
+  }
+
+  return <Outlet />;
+}
 
 export default function App() {
   return (

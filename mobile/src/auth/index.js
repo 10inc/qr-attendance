@@ -1,15 +1,8 @@
 import React from 'react';
-import {getUser, getToken} from './async-storage';
-
+import {getToken} from './async-storage';
 import {accountService} from '../api/accounts';
 
-const AuthContext = React.createContext({
-  status: 'idle',
-  userToken: null,
-  signIn: () => {},
-  signOut: () => {},
-});
-
+const AuthContext = React.createContext();
 export const AuthRef = React.createRef();
 
 export const useAuth = () => {
@@ -18,23 +11,22 @@ export const useAuth = () => {
     throw new Error('useAuth must be inside an AuthProvider with a value');
   }
 
-  const isLoggedIn = context.status === 'signIn';
-
-  return {...context, isLoggedIn};
+  return context;
 };
 
 export const AuthProvider = ({children}) => {
   const [state, dispatch] = React.useReducer(AuthReducer, {
     status: 'idle',
     userToken: null,
+    isLoggedIn: false,
   });
 
   React.useEffect(() => {
     const initState = async () => {
       try {
-        const userToken = await getUser();
-        if (userToken !== null) {
-          dispatch({type: 'SIGN_IN', token: userToken});
+        const token = await getToken();
+        if (token !== null) {
+          dispatch({type: 'SIGN_IN', token: token});
         } else {
           dispatch({type: 'SIGN_OUT'});
         }
@@ -52,12 +44,11 @@ export const AuthProvider = ({children}) => {
   const authActions = React.useMemo(
     () => ({
       signIn: async (email, password) => {
-        console.log('test', email, password);
         const user = await accountService.login(email, password);
 
         if (user) {
-          // Tech debt: Should get from async storage instead of api response
-          dispatch({type: 'SIGN_IN', token: user?.jwtToken});
+          const token = await getToken();
+          dispatch({type: 'SIGN_IN', token: token});
         }
       },
       signOut: async () => {
@@ -82,12 +73,14 @@ const AuthReducer = (prevState, action) => {
         ...prevState,
         status: 'signIn',
         userToken: action.token,
+        isLoggedIn: true,
       };
     case 'SIGN_OUT':
       return {
         ...prevState,
         status: 'signOut',
         userToken: null,
+        isLoggedIn: false,
       };
   }
 };

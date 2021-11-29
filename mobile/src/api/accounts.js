@@ -13,12 +13,10 @@ export const accountService = {
 };
 
 function login(email, password) {
-  console.log('IN LOGIN');
   return fetchWrapper
     .post(`${baseUrl}/authenticate`, {email, password})
     .then(user => {
-      console.log(user);
-      setUser(user.jwtToken);
+      setUser(user);
       return user;
     })
     .catch(function (error) {

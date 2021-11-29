@@ -17,4 +17,7 @@ export const getUser = () => getItem(USER);
 export const removeUser = () => removeItem(USER);
 export const setUser = value => setItem(USER, value);
 
-export const getToken = () => getItem(USER)?.jwtToken;
+export async function getToken() {
+  const user = await getUser();
+  return user?.jwtToken;
+}
