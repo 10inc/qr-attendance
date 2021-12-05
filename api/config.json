@@ -1,13 +1,5 @@
 ﻿{
     "connectionString": "mongodb://localhost:27017/qr-attendance",
     "secret": "35866ccd-26b8-4ac9-82c7-3e4ad02d07e9",
-    "emailFrom": "noreply@qr-attendance.com",
-    "smtpOptions": {
-        "host": "smtp.mailtrap.io",
-        "port": 2525,
-        "auth": {
-            "user": "8736cadd9402a7",
-            "pass": "2f8a2e1b10de10"
-        }
-    }
+    "emailFrom": "noreply@qr-attendance.com"
 }
