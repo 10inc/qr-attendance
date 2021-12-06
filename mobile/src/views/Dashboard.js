@@ -8,6 +8,7 @@ import {eventService} from '../api/events';
 import {useAuth} from '../auth';
 
 const Dashboard = () => {
+  const user = null;
   const {signOut} = useAuth();
   const navigate = useNavigate();
   const [events, setEvents] = useState([]);
@@ -21,15 +22,16 @@ const Dashboard = () => {
   // TODO: Add useMemo for events
 
   return (
-    <View>
+    <View style={styles.container}>
       {/* TODO: Generic component for auth view */}
       <Appbar style={styles.top}>
+        <Appbar.Content title={`Hello ${user?.name || 'Organizer'}.`} />
         <Appbar.Action icon="logout" onPress={signOut} />
       </Appbar>
 
       <List.Section>
         {/* TODO: Add loader */}
-        <List.Subheader>Events</List.Subheader>
+        <List.Subheader style={styles.listHeader}>Events</List.Subheader>
         {events.map(event => {
           return (
             <List.Item
@@ -48,11 +50,40 @@ const Dashboard = () => {
 export default Dashboard;
 
 const styles = StyleSheet.create({
+  container: {
+    marginTop: 50,
+  },
   top: {
     left: 0,
     right: 0,
     top: 0,
     display: 'flex',
     justifyContent: 'flex-end',
+  },
+  header: {
+    textAlign: 'left',
+    fontSize: 'large',
+    marginLeft: 10,
+    marginBottom: 10,
+  },
+  input: {
+    height: 40,
+    margin: 10,
+    justifyContent: 'center',
+  },
+  container: {
+    marginTop: 50,
+  },
+  content: {
+    marginLeft: '15%',
+    marginRight: '15%',
+  },
+  listHeader: {
+    borderBottomWidth: 0.5,
+    borderColor: 'black',
+    color: 'black',
+  },
+  red: {
+    color: 'red',
   },
 });
