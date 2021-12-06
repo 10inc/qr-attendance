@@ -1,7 +1,7 @@
 import React from 'react';
 import {useToast} from 'react-native-paper-toast';
-import {TextInput} from 'react-native-paper';
-import {Text, View, Button} from 'react-native';
+import { Button, Headline, TextInput } from 'react-native-paper';
+import { StyleSheet, View } from 'react-native';
 import {useNavigate} from 'react-router-native';
 
 import {useAuth} from '../auth';
@@ -29,25 +29,53 @@ const Login = () => {
   }, [userToken, navigate]);
 
   return (
-    <View>
-      <TextInput
-        label="Email"
-        value={email}
-        onChangeText={value => setEmail(value)}
-      />
-      <TextInput
-        placeholder="Password"
-        secureTextEntry={true}
-        onChangeText={value => setPassword(value)}
-      />
-      <Text>status : {status}</Text>
-      <Text>userToken : {userToken ? userToken : 'null'}</Text>
-      <View>
-        <Button title="Log IN" onPress={handleLogin} />
-        <Button title="Log Out" onPress={signOut} />
+    <View style={styles.container}>
+      <Headline style={styles.header}>Student Seminar QR System</Headline>
+      <View style={styles.content}>
+        <TextInput
+          label="Email"
+          onChangeText={value => setEmail(value)}
+          placeholder="Enter your email address"
+          value={email}
+        />
+        <TextInput
+          secureTextEntry={true}
+          onChangeText={value => setPassword(value)}
+          placeholder="Enter your password"
+        />
+        <View>
+          <Button mode="contained" onPress={handleLogin} style={styles.input}>
+            LOG IN
+          </Button>
+          <Button mode="contained" onPress={signOut} style={styles.input}>
+            LOG OUT
+          </Button>
+        </View>
       </View>
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  header: {
+    textAlign: 'center',
+    fontSize: 'large',
+  },
+  input: {
+    height: 40,
+    margin: 10,
+    justifyContent: 'center',
+  },
+  container: {
+    marginTop: 50,
+  },
+  content: {
+    marginLeft: '15%',
+    marginRight: '15%',
+  },
+  red: {
+    color: 'red',
+  },
+});
 
 export default Login;
