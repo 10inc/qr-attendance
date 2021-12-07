@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
-import {View, StyleSheet, Button, TouchableOpacity} from 'react-native';
-import {Appbar, Text, Card, Title, Paragraph} from 'react-native-paper';
+import { View, StyleSheet, TouchableOpacity } from 'react-native';
+import { Appbar, Button, Text, Card, Title, Paragraph } from 'react-native-paper';
 import {useLocation, useNavigate} from 'react-router-native';
 
 import QRCodeScanner from 'react-native-qrcode-scanner';
@@ -28,27 +28,11 @@ const Event = () => {
   };
 
   return (
-    <View>
+    <View style={styles.container}>
       <Appbar style={styles.top}>
-        <Appbar.Action
-          icon="subdirectory-arrow-left"
-          onPress={() => navigate(-1)}
-        />
+        <Appbar.Action icon="subdirectory-arrow-left" onPress={() => navigate(-1)} />
         <Appbar.Action icon="logout" onPress={signOut} />
       </Appbar>
-
-      <View>
-        <Card>
-          <Card.Content>
-            <Title>{state.event.name}</Title>
-            <Paragraph>{state.event.date}</Paragraph>
-            {!scan && <Button title="Start Scan" onPress={startScan} />}
-            {scan && (
-              <Button title="Stop Scan" onPress={() => setScan(false)} />
-            )}
-          </Card.Content>
-        </Card>
-      </View>
       {scan && (
         <View style={styles.sectionContainer}>
           <QRCodeScanner
@@ -64,13 +48,37 @@ const Event = () => {
           />
         </View>
       )}
+      <View>
+        <Card>
+          <Card.Content>
+            <Title>{state.event.name}</Title>
+            <Paragraph>{state.event.date}</Paragraph>
+            {!scan && (
+              <Button mode="contained" style={styles.input} onPress={startScan}>
+                Start Scan
+              </Button>
+            )}
+            {scan && (
+              <Button mode="contained" style={styles.input} onPress={() => setScan(false)}>
+                Stop Scan
+              </Button>
+            )}
+          </Card.Content>
+        </Card>
+      </View>
     </View>
   );
 };
 
-export default Event;
-
 const styles = StyleSheet.create({
+  container: {
+    marginTop: 50,
+  },
+  input: {
+    height: 40,
+    margin: 40,
+    justifyContent: 'center',
+  },
   top: {
     left: 0,
     right: 0,
@@ -85,3 +93,5 @@ const styles = StyleSheet.create({
     marginTop: 32,
   },
 });
+
+export default Event;
