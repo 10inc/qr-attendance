@@ -1,4 +1,5 @@
 const path = require('path')
+const webpack = require('webpack')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const Dotenv = require('dotenv-webpack');
@@ -14,7 +15,10 @@ module.exports = {
         }),
         new Dotenv({
             systemvars: true
-        })
+        }),
+        new webpack.ProvidePlugin({
+            process: 'process/browser',
+        }),
     ],
     module: {
         rules: [
@@ -45,14 +49,14 @@ module.exports = {
             // key-value
         })
     },
-    node: {
-        fs: "empty",
-    },
     resolve: {
         mainFiles: ['index', 'Index'],
         extensions: ['.js', '.jsx'],
         alias: {
             '@': path.resolve(__dirname, 'src/'),
-        }
+        },
+        fallback: {
+            "fs": false
+        },
     },
 }
