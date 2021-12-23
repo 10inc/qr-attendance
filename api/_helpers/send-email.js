@@ -3,24 +3,21 @@ const config = require('config.json');
 
 module.exports = sendEmail;
 
-// const smtpMailtrap = {
-//     host: "smtp.mailtrap.io",
-//     port: 2525,
-//     auth: {
-//         user: process.env.MAILTRAP_USER,
-//         pass: process.env.MAILTRAP_PASS
-//     }
-// }
-
-const smtpGoogle = {
-    service: 'gmail',
+let smtpClient = {
     auth: {
-        user: process.env.GOOGLE_SMTP_USER,
-        pass: process.env.GOOGLE_SMTP_PASS,
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASS
     }
 }
 
+if (process.env.SMTP_CLIENT === "mailtrap") {
+    smtpClient["host"] = "smtp.mailtrap.io"
+    smtpClient["port"] = 2525
+} else if (process.env.SMTP_CLIENT === "gmail") {
+    smtpClient["service"] = 'gmail'
+}
+
 async function sendEmail({ to, subject, html, from = config.emailFrom, attachments=[] }) {
-    const transporter = nodemailer.createTransport(smtpGoogle);
+    const transporter = nodemailer.createTransport(smtpClient);
     await transporter.sendMail({ from, to, subject, html, attachments });
 }
