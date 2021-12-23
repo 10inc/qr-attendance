@@ -1,37 +1,57 @@
 import React, { useState, useEffect } from 'react';
-import { Route, Switch, Redirect, useLocation } from 'react-router-dom';
+import { Box } from '@mui/material';
+import { styled } from '@mui/material/styles';
 
-import { Role } from '@/_helpers';
+import config from 'config';
+import { TopNav, SideBar, Alert } from '@/_components';
 import { accountService } from '@/_services';
-import { Nav, PrivateRoute, Alert } from '@/_components';
-import { Home } from '@/home';
-import { Profile } from '@/profile';
-import { Admin } from '@/admin';
-import { Account } from '@/account';
+import { Routes } from './Routes'
 
 function App() {
-    const { pathname } = useLocation();  
-    const [user, setUser] = useState({});
+  const [user, setUser] = useState({});
+  const [open, setOpen] = useState(false);
 
-    useEffect(() => {
-        const subscription = accountService.user.subscribe(x => setUser(x));
-        return subscription.unsubscribe;
-    }, []);
+  useEffect(() => {
+    const subscription = accountService.user.subscribe(x => setUser(x));
+    return subscription.unsubscribe;
+  }, []);
 
-    return (
-        <div className={'app-container' + (user && ' bg-light')}>
-            <Nav />
-            <Alert />
-            <Switch>
-                <Redirect from="/:url*(/+)" to={pathname.slice(0, -1)} />
-                <PrivateRoute exact path="/" component={Home} />
-                <PrivateRoute path="/profile" component={Profile} />
-                <PrivateRoute path="/admin" roles={[Role.Admin]} component={Admin} />
-                <Route path="/account" component={Account} />
-                <Redirect from="*" to="/" />
-            </Switch>
-        </div>
-    );
+  const toggleOpen = () => {
+    setOpen(!open)
+  }
+
+  return (
+    <div className={'app-container' + (user && ' bg-light')}>
+      <Box>
+        <SideBar open={open} toggle={toggleOpen} />
+        <TopNav open={open} toggle={toggleOpen} />
+        <Main open={open}>
+          <Alert />
+          <Routes />
+        </Main>
+      </Box>
+    </div>
+  );
 }
 
-export { App }; 
+const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(
+  ({ theme, open }) => ({
+    flexGrow: 1,
+    padding: theme.spacing(3),
+    transition: theme.transitions.create('margin', {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen,
+    }),
+    marginLeft: 0,
+    ...(open && {
+      transition: theme.transitions.create('margin', {
+        easing: theme.transitions.easing.easeOut,
+        duration: theme.transitions.duration.enteringScreen,
+      }),
+      marginLeft: `${config.drawerWidth}px`,
+    }),
+    marginTop: '5%',
+  }),
+);
+
+export { App };

@@ -52,7 +52,7 @@ module.exports = {
     externals: {
         // global app config object
         config: JSON.stringify({
-            // key-value
+            drawerWidth: 240
         })
     },
     resolve: {
