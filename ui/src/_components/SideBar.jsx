@@ -1,5 +1,5 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { Drawer, Box, List, ListItem, ListItemIcon, ListItemText } from '@mui/material';
 import {
   HomeOutlined as HomeIcon,
@@ -36,6 +36,7 @@ export function SideBar({ open, toggle }) {
   ]
 
   const user = accountService.userValue
+  const history = useHistory()
 
   return (
     <Drawer
@@ -72,15 +73,14 @@ export function SideBar({ open, toggle }) {
           {items.map((item) => {
             if (!item?.admin || item?.admin && user.role === Role.Admin) {
               return (
-                <ListItem button key={item.text}>
+                <ListItem button key={item.text} onClick={() => history.push(item.path)}>
                   <ListItemIcon>
                     {item.icon}
                   </ListItemIcon>
-                  <ListItemText sx={{
-                    color: 'white'
-                  }}>
-                    <NavLink to={item.path}>{item.text}</NavLink>
-                  </ListItemText>
+                  <ListItemText
+                    sx={{color: 'white'}}
+                    primary={item.text}
+                  />
                 </ListItem>
               )
             }
