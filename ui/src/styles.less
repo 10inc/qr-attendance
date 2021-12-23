@@ -1,17 +1,14 @@
-// global styles
-a { cursor: pointer; }
+@primary: #009c85;
 
-.app-container {
-    min-height: 320px;
-}
+a {
+  cursor: pointer;
+  text-decoration: none;
 
-.admin-nav {
-    padding-top: 0;
-    padding-bottom: 0;
-    background-color: #e8e9ea;
-    border-bottom: 1px solid #ccc;
+  &:visited, &:active {
+    color: inherit;
+  }
 }
+* { font-family: 'Poppins', sans-serif }
 
-*{
-    font-family: 'Poppins', sans-serif;
-}
+.primary-bg { background-color: @primary }
+.primary { color: @primary }

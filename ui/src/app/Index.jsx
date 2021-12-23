@@ -9,7 +9,7 @@ import { Routes } from './Routes'
 
 function App() {
   const [user, setUser] = useState({});
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(true);
 
   useEffect(() => {
     const subscription = accountService.user.subscribe(x => setUser(x));
@@ -23,8 +23,12 @@ function App() {
   return (
     <div className={'app-container' + (user && ' bg-light')}>
       <Box>
-        <SideBar open={open} toggle={toggleOpen} />
-        <TopNav open={open} toggle={toggleOpen} />
+        {(user && Object.keys(user).length) && (
+          <React.Fragment>
+            <SideBar open={open} toggle={toggleOpen} />
+            <TopNav open={open} toggle={toggleOpen} />
+          </React.Fragment>
+        )}
         <Main open={open}>
           <Alert />
           <Routes />

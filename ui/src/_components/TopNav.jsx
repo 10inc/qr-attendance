@@ -3,12 +3,7 @@ import { styled } from '@mui/material/styles';
 import { AppBar, Box, Toolbar, IconButton } from '@mui/material';
 import { Menu as MenuIcon, AccountCircle as UserIcon } from '@mui/icons-material';
 
-import { accountService } from '@/_services';
-
 function TopNav({ toggle, open }) {
-  const user = accountService.userValue
-  if (!user) return null;
-
   return (
     <Box sx={{ flexGrow: 1 }}>
       <PersistentAppBar open={open}>
@@ -16,7 +11,7 @@ function TopNav({ toggle, open }) {
           <IconButton
             size="large"
             edge="end"
-            color="inherit"
+            color="primary"
             aria-label="menu"
             sx={{ mr: 2 }}
             onClick={toggle}
@@ -27,7 +22,7 @@ function TopNav({ toggle, open }) {
           <IconButton
             size="large"
             edge="end"
-            color="inherit"
+            color="primary"
             aria-label="user"
           >
             <UserIcon />
@@ -41,6 +36,7 @@ function TopNav({ toggle, open }) {
 const PersistentAppBar = styled(AppBar, {
   shouldForwardProp: (prop) => prop !== 'open',
 })(({ theme, open }) => ({
+  backgroundColor: 'white',
   transition: theme.transitions.create(['margin', 'width'], {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen,

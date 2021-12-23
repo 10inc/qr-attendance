@@ -46,12 +46,28 @@ export function SideBar({ open, toggle }) {
           width: config.drawerWidth,
           boxSizing: 'border-box',
         },
-      }
-      }
+      }}
       variant="persistent" anchor="left"
       open={open} onClose={toggle}
     >
-      <Box>
+      <Box sx={{
+        backgroundColor: '#009c85',
+        color: 'white',
+        height: '100%',
+      }}>
+        <Box sx={{ display: 'flex' }}>
+          <Box
+            component="img"
+            sx={{
+              height: '3.75em',
+              width: '3.75em',
+              margin: '0.5em 0.25em'
+            }}
+            alt="QR CodeIn"
+            src="/logo.png"
+          />
+          <h2 styles={{fontWeight: '700'}}>QR CodeIn</h2>
+        </Box>
         <List>
           {items.map((item) => {
             if (!item?.admin || item?.admin && user.role === Role.Admin) {
@@ -60,7 +76,9 @@ export function SideBar({ open, toggle }) {
                   <ListItemIcon>
                     {item.icon}
                   </ListItemIcon>
-                  <ListItemText>
+                  <ListItemText sx={{
+                    color: 'white'
+                  }}>
                     <NavLink to={item.path}>{item.text}</NavLink>
                   </ListItemText>
                 </ListItem>
@@ -68,9 +86,9 @@ export function SideBar({ open, toggle }) {
             }
             return <></>
           })}
-          <ListItem button key="Logout">
+          <ListItem button key="Logout" >
             <ListItemIcon>
-              <LogoutIcon />
+              <LogoutIcon color="inherit" />
             </ListItemIcon>
             <ListItemText>
               <a onClick={accountService.logout}>Logout</a>
