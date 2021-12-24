@@ -7,11 +7,11 @@ import { accountService, alertService } from '@/_services';
 
 function List({ match }) {
   const { path } = match;
-  const [users, setUsers] = useState(null);
   const history = useHistory()
+  const [users, setUsers] = useState([]);
 
   useEffect(() => {
-    accountService.getAll().then(x => setUsers(x));
+    accountService.getAll().then(setUsers);
   }, []);
 
   function deleteUser(id) {

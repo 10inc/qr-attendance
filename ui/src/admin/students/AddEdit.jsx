@@ -1,117 +1,123 @@
 import React, { useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { Formik, Field, Form, ErrorMessage } from 'formik';
+import { useFormik } from 'formik';
 import * as Yup from 'yup';
+import { Paper, Box, Button, TextField } from '@mui/material';
+import { LoadingButton } from '@mui/lab';
 
 import { studentService, alertService } from '@/_services';
 
 function AddEdit({ history, match }) {
-    const { id } = match.params;
-    const isAddMode = !id;
+  const { id } = match.params;
+  const isAddMode = !id;
 
-    const initialValues = {
-        name: '',
-        section: '',
-        year: '',
-    };
+  const initialValues = {
+    name: '',
+    email: '',
+    section: '',
+    year: '',
+  };
 
-    const validationSchema = Yup.object().shape({
-        name: Yup.string()
-            .required('Name is required'),
-        email: Yup.string()
-            .email('Email is invalid')
-            .required('Email is required'),
-        section: Yup.string()
-            .required('Section is required'),
-        year: Yup.string()
-            .required('Year is required'),
-    });
+  const validationSchema = Yup.object().shape({
+    name: Yup.string()
+      .required('Name is required'),
+    email: Yup.string()
+      .email('Email is invalid')
+      .required('Email is required'),
+    section: Yup.string()
+      .required('Section is required'),
+    year: Yup.string()
+      .required('Year is required'),
+  });
 
-    function onSubmit(fields, { setStatus, setSubmitting }) {
-        setStatus();
-        if (isAddMode) {
-            createStudent(fields, setSubmitting);
-        } else {
-            updateStudent(id, fields, setSubmitting);
-        }
-    }
-
-    function createStudent(fields, setSubmitting) {
+  const formik = useFormik({
+    initialValues: initialValues,
+    validationSchema: validationSchema,
+    onSubmit: (fields, { setSubmitting }) => {
+      setSubmitting(true)
+      if (isAddMode) {
         studentService.create(fields)
-            .then(() => {
-                alertService.success('Student added successfully', { keepAfterRouteChange: true });
-                history.push('.');
-            })
-            .catch(error => {
-                setSubmitting(false);
-                alertService.error(error);
-            });
-    }
-
-    function updateStudent(id, fields, setSubmitting) {
+          .then((res) => {
+            alertService.success('Student added successfully', { keepAfterRouteChange: true });
+            history.push(res?.id ? `/admin/students/${res.id}` : `/admin/students`);
+          })
+          .catch(error => {
+            setSubmitting(false);
+            alertService.error(error);
+          });
+      } else {
         studentService.update(id, fields)
-            .then(() => {
-                alertService.success('Update successful', { keepAfterRouteChange: true });
-                history.push('..');
-            })
-            .catch(error => {
-                setSubmitting(false);
-                alertService.error(error);
-            });
+          .then(() => {
+            alertService.success('Update successful', { keepAfterRouteChange: true });
+            history.push(`/admin/students/${id}`);
+          })
+          .catch(error => {
+            setSubmitting(false);
+            alertService.error(error);
+          });
+      }
+    },
+    handleChange: (event) => {
+      const { name, value } = event.target
+      formik.setFieldValue(name, value)
     }
+  });
 
-    return (
-        <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={onSubmit}>
-            {({ errors, touched, isSubmitting, setFieldValue }) => {
-                useEffect(() => {
-                    if (!isAddMode) {
-                        // get student and set form fields
-                        studentService.getById(id).then(student => {
-                            const fields = ['name', 'section', 'year'];
-                            fields.forEach(field => setFieldValue(field, student[field], false));
-                        });
-                    }
-                }, []);
+  useEffect(() => {
+    if (!isAddMode) {
+      studentService.getById(id).then(student => {
+        const { name, email, section, year } = student
+        formik.setFieldValue('name', name, false)
+        formik.setFieldValue('email', email, false)
+        formik.setFieldValue('section', section, false)
+        formik.setFieldValue('year', year, false)
+      });
+    }
+  }, []);
 
-                return (
-                    <Form>
-                        <h1>{isAddMode ? 'Add Student' : 'Edit Student'}</h1>
-                        <div className="form-group col-7">
-                            <label>Name</label>
-                            <Field name="name" type="text" className={'form-control' + (errors.name && touched.name ? ' is-invalid' : '')} />
-                            <ErrorMessage name="name" component="div" className="invalid-feedback" />
-                        </div>
+  return (
+    <Paper>
+      <Box sx={{ p: 2 }}>
+        <form onSubmit={formik.handleSubmit}>
+          <h1>{isAddMode ? 'Add' : 'Update'} User</h1>
 
-                        <div className="form-group col-7">
-                            <label>Email</label>
-                            <Field name="email" type="text" className={'form-control' + (errors.email && touched.email ? ' is-invalid' : '')} />
-                            <ErrorMessage name="email" component="div" className="invalid-feedback" />
-                        </div>
+          <Box>
+            {['name', 'email', 'section', 'year'].map((item) =>
+              <TextField
+                key={item}
+                fullWidth
+                id={item}
+                name={item}
+                label={item.charAt(0).toUpperCase() + item.slice(1)}
+                value={formik.values[item]}
+                onChange={formik.handleChange}
+                error={Boolean(formik.errors[item])}
+                helperText={formik.errors[item]}
+                type='text'
+                sx={{ m: 1, width: '25ch' }}
+              />
+            )}
+          </Box>
 
-                        <div className="form-group col-7">
-                            <label>Section</label>
-                            <Field name="section" type="text" className={'form-control' + (errors.section && touched.section ? ' is-invalid' : '')} />
-                            <ErrorMessage name="section" component="div" className="invalid-feedback" />
-                        </div>
-
-                        <div className="form-group col-7">
-                            <label>Year</label>
-                            <Field name="year" type="text" className={'form-control' + (errors.year && touched.year ? ' is-invalid' : '')} />
-                            <ErrorMessage name="year" component="div" className="invalid-feedback" />
-                        </div>
-
-                        <div className="form-group">
-                            <button type="submit" disabled={isSubmitting} className="btn btn-primary">
-                                {isSubmitting && <span className="spinner-border spinner-border-sm mr-1"></span>}
-                                Save
-                            </button>
-                            <Link to={isAddMode ? '.' : '..'} className="btn btn-link">Cancel</Link>
-                        </div>
-                    </Form>
-                );
-            }}
-        </Formik>
-    );
+          <Box sx={{ mt: 1 }}>
+            <LoadingButton
+              variant="contained"
+              loading={formik.isSubmitting}
+              type="submit"
+            >
+              Save
+            </LoadingButton>
+            <Button
+              variant="outlined"
+              onClick={history.goBack}
+              sx={{ ml: 1 }}
+            >
+              Back
+            </Button>
+          </Box>
+        </form>
+      </Box>
+    </Paper>
+  );
 }
 
 export { AddEdit };

@@ -3,13 +3,23 @@ import { Button } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 
 export function TableActions({ actions }) {
-  const { edit, del } = actions;
+  const { show, edit, del } = actions;
   return(
     <React.Fragment>
+      {show &&
+        <Button
+          variant="contained"
+          onClick={show.handle}
+          sx={{ mr: 1 }}
+        >
+          Show
+        </Button>
+      }
       { edit &&
         <Button
           variant="contained"
           onClick={edit.handle}
+          sx={{ mr: 1 }}
         >
           Edit
         </Button>
@@ -21,7 +31,7 @@ export function TableActions({ actions }) {
           loading={del.loader}
           onClick={del.handle}
           color="error"
-          sx={{ ml: 1 }}
+          sx={{ mr: 1 }}
         >
           Delete
         </LoadingButton>
