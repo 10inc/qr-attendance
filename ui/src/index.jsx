@@ -15,6 +15,9 @@ const theme = createTheme({
       main: '#009c85'
     }
   },
+  typography: {
+    fontFamily: ['"Poppins"', 'sans-serif'].join(',')
+  },
   components: {
     MuiListItemIcon: {
       styleOverrides: {
@@ -22,7 +25,12 @@ const theme = createTheme({
           color: 'white'
         },
       }
-    }
+    },
+    MuiPaper: {
+      defaultProps: {
+        elevation: 5
+      },
+    },
   }
 });
 

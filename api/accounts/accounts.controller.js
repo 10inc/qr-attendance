@@ -166,8 +166,7 @@ function getById(req, res, next) {
 
 function createSchema(req, res, next) {
     const schema = Joi.object({
-        firstName: Joi.string().required(),
-        lastName: Joi.string().required(),
+        name: Joi.string().required(),
         email: Joi.string().email().required(),
         password: Joi.string().min(6).required(),
         confirmPassword: Joi.string().valid(Joi.ref('password')).required(),
@@ -184,8 +183,7 @@ function create(req, res, next) {
 
 function updateSchema(req, res, next) {
     const schemaRules = {
-        firstName: Joi.string().empty(''),
-        lastName: Joi.string().empty(''),
+        name: Joi.string().empty(''),
         email: Joi.string().email().empty(''),
         password: Joi.string().min(6).empty(''),
         confirmPassword: Joi.string().valid(Joi.ref('password')).empty('')

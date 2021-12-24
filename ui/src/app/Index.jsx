@@ -54,7 +54,7 @@ const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(
       }),
       marginLeft: `${config.drawerWidth}px`,
     }),
-    marginTop: '5%',
+    marginTop: '4%',
   }),
 );
 
