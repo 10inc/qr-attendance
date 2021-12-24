@@ -1,69 +1,81 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
+import { Paper, Box, Button, Table, TableHead, TableRow, TableCell, TableBody } from '@mui/material';
 
-import { eventService } from '@/_services';
+import { TableActions } from '@/_components';
+
+import { eventService, alertService } from '@/_services';
 
 function List({ match }) {
-    const { path } = match;
-    const [events, setEvents] = useState(null);
+  const { path } = match;
+  const history = useHistory();
+  const [events, setEvents] = useState([]);
 
-    useEffect(() => {
-        eventService.getAll().then(x => setEvents(x));
-    }, []);
+  useEffect(() => {
+    eventService.getAll().then(setEvents);
+  }, []);
 
-    function deleteEvent(id) {
-        setEvents(events.map(x => {
-            if (x.id === id) { x.isDeleting = true; }
-            return x;
-        }));
-        eventService.delete(id).then(() => {
-            setEvents(events => events.filter(x => x.id !== id));
-        });
-    }
+  function deleteEvent(id) {
+    setEvents(events.map(x => {
+      if (x.id === id) { x.isDeleting = true; }
+      return x;
+    }));
+    eventService.delete(id)
+      .then(() => {
+        setEvents(events => events.filter(x => x.id !== id));
+        alertService.success('Event deleted successfully', { keepAfterRouteChange: true });
+      })
+      .catch(error => {
+        alertService.error(error);
+      });
+  }
 
-    return (
-        <div>
-            <h1>Events</h1>
-            <p>List of Events</p>
-            <Link to={`${path}/add`} className="btn btn-sm btn-success mb-2">Add Event</Link>
-            <table className="table table-striped">
-                <thead>
-                    <tr>
-                        <th style={{ width: '30%' }}>Name</th>
-                        <th style={{ width: '30%' }}>Date</th>
-                        <th style={{ width: '30%' }}>Attendees</th>
-                        <th style={{ width: '10%' }}></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {events && events.map(event =>
-                        <tr key={event.id}>
-                            <td><Link to={`${path}/${event.id}`}>{event.name}</Link></td>
-                            <td>{event.date}</td>
-                            <td>{event.attendees.length}</td>
-                            <td style={{ whiteSpace: 'nowrap' }}>
-                                <Link to={`${path}/${event.id}`} className="btn btn-sm btn-success mr-1">Details</Link>
-                                <Link to={`${path}/edit/${event.id}`} className="btn btn-sm btn-primary mr-1">Edit</Link>
-                                <button onClick={() => deleteEvent(event.id)} className="btn btn-sm btn-danger" style={{ width: '60px' }} disabled={event.isDeleting}>
-                                    {event.isDeleting
-                                        ? <span className="spinner-border spinner-border-sm"></span>
-                                        : <span>Delete</span>
-                                    }
-                                </button>
-                            </td>
-                        </tr>
-                    )}
-                    {!events &&
-                        <tr>
-                            <td colSpan="4" className="text-center">
-                                <span className="spinner-border spinner-border-lg align-center"></span>
-                            </td>
-                        </tr>
+  return (
+    <Paper>
+      <Box sx={{ p: 2 }}>
+        <h1>Events</h1>
+        <Button
+          variant="contained"
+          onClick={() => { history.push(`${path}/add`) }}
+        >
+          Add Event
+        </Button>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>Name</TableCell>
+              <TableCell>Date</TableCell>
+              <TableCell>Attendees</TableCell>
+              <TableCell></TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {events && events.map(event =>
+              <TableRow key={event.id}>
+                <TableCell>{event.name}</TableCell>
+                <TableCell>{new Date(event.date).toLocaleDateString("fr-CA")}</TableCell>
+                <TableCell>{event.attendees.length}</TableCell>
+                <TableCell>
+                  <TableActions actions={{
+                    show: {
+                      handle: () => history.push(`${path}/${event.id}`)
+                    },
+                    edit: {
+                      handle: () => history.push(`${path}/edit/${event.id}`)
+                    },
+                    del: {
+                      handle: () => deleteEvent(event.id),
+                      loader: event?.isDeleting
                     }
-                </tbody>
-            </table>
-        </div>
-    );
+                  }} />
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </Box>
+    </Paper>
+  );
 }
 
 export { List };

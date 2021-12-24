@@ -1,115 +1,151 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { Formik, Field, Form, ErrorMessage } from 'formik';
+import { useFormik } from 'formik';
 import * as Yup from 'yup';
-
+import {
+  Paper, Box, Button, TextField,
+  FormControl, FormHelperText, InputLabel, Select, MenuItem
+} from '@mui/material';
+import { LoadingButton, MobileDatePicker } from '@mui/lab';
 import { eventService, alertService, studentService } from '@/_services';
 
 function AddEdit({ history, match }) {
-    const { id } = match.params;
-    const isAddMode = !id;
+  const { id } = match.params;
+  const isAddMode = !id;
+  const [students, setStudents] = useState([])
+  const initialValues = {
+    name: '',
+    date: '',
+    attendees: []
+  };
 
-    const initialValues = {
-        name: '',
-        date: '',
-        attendees: []
-    };
 
-    const [attendeeOptions, setAttendeeOptions] = useState([]);
+  const validationSchema = Yup.object().shape({
+    name: Yup.string()
+      .required('Name is required'),
+    date: Yup.date()
+      .required('Date is invalid'),
+    attendees: Yup.array()
+  });
 
-    const validationSchema = Yup.object().shape({
-        name: Yup.string()
-            .required('Name is required'),
-        date: Yup.date()
-            .required('Date is invalid'),
-        attendees: Yup.array()
-    });
-
-    function onSubmit(fields, { setStatus, setSubmitting }) {
-        setStatus();
-        if (isAddMode) {
-            createEvent(fields, setSubmitting);
-        } else {
-            updateEvent(id, fields, setSubmitting);
-        }
-    }
-
-    function createEvent(fields, setSubmitting) {
+  const formik = useFormik({
+    initialValues: initialValues,
+    validationSchema: validationSchema,
+    onSubmit: (fields, { setSubmitting }) => {
+      setSubmitting(true)
+      if (isAddMode) {
         eventService.create(fields)
-            .then(() => {
-                alertService.success('Event added successfully', { keepAfterRouteChange: true });
-                history.push('.');
-            })
-            .catch(error => {
-                setSubmitting(false);
-                alertService.error(error);
-            });
-    }
-
-    function updateEvent(id, fields, setSubmitting) {
+          .then((res) => {
+            alertService.success('Event added successfully', { keepAfterRouteChange: true });
+            history.push(res?.id ? `/admin/events/${res.id}` : `/admin/events`);
+          })
+          .catch(error => {
+            setSubmitting(false);
+            alertService.error(error);
+          });
+      } else {
         eventService.update(id, fields)
-            .then(() => {
-                alertService.success('Update successful', { keepAfterRouteChange: true });
-                history.push('..');
-            })
-            .catch(error => {
-                setSubmitting(false);
-                alertService.error(error);
-            });
+          .then(() => {
+            alertService.success('Update successful', { keepAfterRouteChange: true });
+            history.push(`/admin/events/${id}`);
+          })
+          .catch(error => {
+            setSubmitting(false);
+            alertService.error(error);
+          });
+      }
+    },
+    handleChange: (event) => {
+      const { name, value } = event.target
+      formik.setFieldValue(name, value)
     }
+  });
 
-    return (
-        <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={onSubmit}>
-            {({ errors, touched, isSubmitting, setFieldValue }) => {
-                useEffect(() => {
-                    if (!isAddMode) {
-                        // get user and set form fields
-                        eventService.getById(id).then(event => {
-                            const fields = ['name', 'date', 'attendees'];
-                            fields.forEach(field => setFieldValue(field, event[field], false));
-                        });
-                    }
-                    studentService.getAll().then(students => setAttendeeOptions(students))
-                }, []);
+  useEffect(() => {
+    if (!isAddMode) {
+      eventService.getById(id).then(event => {
+        const { name, date } = event
+        formik.setFieldValue('name', name, false)
+        formik.setFieldValue('date', new Date(date).toLocaleDateString("fr-CA"))
+      });
+    }
+    studentService.getAll().then(setStudents)
+  }, []);
 
-                return (
-                    <Form>
-                        <h1>{isAddMode ? 'Add Event' : 'Edit Event'}</h1>
-                        <div className="form-group col-7">
-                            <label>Name</label>
-                            <Field name="name" type="text" className={'form-control' + (errors.name && touched.name ? ' is-invalid' : '')} />
-                            <ErrorMessage name="name" component="div" className="invalid-feedback" />
-                        </div>
+  return (
+    <Paper>
+      <Box sx={{ p: 2 }}>
+        <form onSubmit={formik.handleSubmit}>
+          <h1>{isAddMode ? 'Add' : 'Update'} Event</h1>
 
-                        <div className="form-group col-7">
-                            <label>Date</label>
-                            <Field name="date" type="date" className={'form-control' + (errors.date && touched.date ? ' is-invalid' : '')} />
-                            <ErrorMessage name="date" component="div" className="invalid-feedback" />
-                        </div>
+          <Box>
+            <TextField
+              fullWidth
+              id='name'
+              name='name'
+              label='Name'
+              value={formik.values.name}
+              onChange={formik.handleChange}
+              error={Boolean(formik.errors.name)}
+              helperText={formik.errors.name}
+              type='text'
+              sx={{ m: 1, width: '25ch' }}
+            />
 
-                        <div className="form-group col-7">
-                            <label>Attendees (Temp until QR)</label>
-                            <Field as="select" name="attendees" multiple className={'form-control' + (errors.date && touched.date ? ' is-invalid' : '')}  >
-                                {attendeeOptions && attendeeOptions.map((option, i) => (
-                                    <option key={'attendee_option_'+i} value={option.id}>
-                                        {option.name}
-                                    </option>
-                                ))}
-                            </Field>
-                        </div>
+            <TextField
+              fullWidth
+              id="date"
+              name="date"
+              label="Event Date"
+              value={formik.values.date}
+              onChange={formik.handleChange}
+              error={Boolean(formik.errors.date)}
+              helperText={formik.errors.date}
+              type="date"
+              sx={{ m: 1, width: '25ch' }}
+              InputLabelProps={{
+                shrink: true,
+              }}
+            />
 
-                        <div className="form-group">
-                            <button type="submit" disabled={isSubmitting} className="btn btn-primary">
-                                {isSubmitting && <span className="spinner-border spinner-border-sm mr-1"></span>}
-                                Save
-                            </button>
-                            <Link to={isAddMode ? '.' : '..'} className="btn btn-link">Cancel</Link>
-                        </div>
-                    </Form>
-                );
-            }}
-        </Formik>
-    );
+            <FormControl error={Boolean(formik.errors.attendees)} sx={{ m: 1, width: '25ch' }}>
+              <InputLabel id="role-label">Attendees</InputLabel>
+              <Select
+                labelId="role-label"
+                id="attendees"
+                name="attendees"
+                value={formik.values.attendees}
+                label="Attendees"
+                multiple
+                onChange={formik.handleChange}
+              >
+                {students.map((student) =>
+                  <MenuItem key={student?.name} value={student?.id}>{student?.name}</MenuItem>
+                )}
+              </Select>
+              <FormHelperText>{formik.errors.attendees}</FormHelperText>
+            </FormControl>
+          </Box>
+
+          <Box sx={{ mt: 1 }}>
+            <LoadingButton
+              variant="contained"
+              loading={formik.isSubmitting}
+              type="submit"
+            >
+              Save
+            </LoadingButton>
+            <Button
+              variant="outlined"
+              onClick={history.goBack}
+              sx={{ ml: 1 }}
+            >
+              Back
+            </Button>
+          </Box>
+        </form>
+      </Box>
+    </Paper>
+  );
 }
 
 export { AddEdit };

@@ -78,7 +78,7 @@ function AddEdit({ history, match }) {
     <Paper>
       <Box sx={{ p: 2 }}>
         <form onSubmit={formik.handleSubmit}>
-          <h1>{isAddMode ? 'Add' : 'Update'} User</h1>
+          <h1>{isAddMode ? 'Add' : 'Update'} Student</h1>
 
           <Box>
             {['name', 'email', 'section', 'year'].map((item) =>
