@@ -27,6 +27,7 @@ function Admin({ match }) {
           </IconButton>
           {['users', 'students', 'events'].map((item) =>
             <Button
+              key={item}
               onClick={() => history.push(`${path}/${item}`)}
               sx={{ color: 'white' }}
             >

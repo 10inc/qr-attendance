@@ -3,7 +3,7 @@ import { useHistory } from 'react-router-dom';
 import { Paper, Box, Button, Table, TableHead, TableRow, TableCell, TableBody } from '@mui/material';
 
 import { TableActions } from '@/_components';
-import { accountService } from '@/_services';
+import { accountService, alertService } from '@/_services';
 
 function List({ match }) {
   const { path } = match;
@@ -19,9 +19,14 @@ function List({ match }) {
       if (x.id === id) { x.isDeleting = true; }
       return x;
     }));
-    accountService.delete(id).then(() => {
-      setUsers(users => users.filter(x => x.id !== id));
-    });
+    accountService.delete(id)
+      .then(() => {
+        alertService.success('User deleted successfully', { keepAfterRouteChange: true });
+        setUsers(users => users.filter(x => x.id !== id));
+      })
+      .catch(error => {
+        alertService.error(error);
+      });
   }
 
   return (

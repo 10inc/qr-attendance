@@ -1,143 +1,167 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Formik, Field, Form, ErrorMessage } from 'formik';
+import { useFormik } from 'formik';
 import * as Yup from 'yup';
+import { Paper, Box, Button, TextField,
+  FormControl, FormHelperText, InputLabel, Select, MenuItem } from '@mui/material';
+import { LoadingButton } from '@mui/lab';
 
+import { Role } from '@/_helpers';
 import { accountService, alertService } from '@/_services';
 
 function AddEdit({ history, match }) {
-    const { id } = match.params;
-    const isAddMode = !id;
-    
-    const initialValues = {
-        name: '',
-        email: '',
-        role: '',
-        password: '',
-        confirmPassword: ''
-    };
+  const { id } = match.params;
+  const isAddMode = !id;
+  const initialValues = {
+    name: '',
+    email: '',
+    role: '',
+    password: '',
+    confirmPassword: ''
+  };
 
-    const validationSchema = Yup.object().shape({
-        name: Yup.string()
-            .required('Name is required'),
-        email: Yup.string()
-            .email('Email is invalid')
-            .required('Email is required'),
-        role: Yup.string()
-            .required('Role is required'),
-        password: Yup.string()
-            .concat(isAddMode ? Yup.string().required('Password is required') : null)
-            .min(6, 'Password must be at least 6 characters'),
-        confirmPassword: Yup.string()
-            .when('password', (password, schema) => {
-                if (password) return schema.required('Confirm Password is required');
-            })
-            .oneOf([Yup.ref('password')], 'Passwords must match')
-    });
+  const validationSchema = Yup.object().shape({
+    name: Yup.string()
+      .required('Name is required'),
+    email: Yup.string()
+      .email('Email is invalid')
+      .required('Email is required'),
+    role: Yup.string()
+      .required('Role is required'),
+    password: Yup.string()
+      .concat(isAddMode ? Yup.string().required('Password is required') : null)
+      .min(6, 'Password must be at least 6 characters'),
+    confirmPassword: Yup.string()
+      .when('password', (password, schema) => {
+        if (password) return schema.required('Confirm Password is required');
+      })
+      .oneOf([Yup.ref('password')], 'Passwords must match')
+  });
 
-    function onSubmit(fields, { setStatus, setSubmitting }) {
-        setStatus();
-        if (isAddMode) {
-            createUser(fields, setSubmitting);
-        } else {
-            updateUser(id, fields, setSubmitting);
-        }
-    }
+  const formik = useFormik({
+    initialValues: initialValues,
+    validationSchema: validationSchema,
+    onSubmit: (fields, { setSubmitting }) => {
+      setSubmitting(true)
 
-    function createUser(fields, setSubmitting) {
+      if (isAddMode) {
         accountService.create(fields)
-            .then(() => {
-                alertService.success('User added successfully', { keepAfterRouteChange: true });
-                history.push('.');
-            })
-            .catch(error => {
-                setSubmitting(false);
-                alertService.error(error);
-            });
-    }
-
-    function updateUser(id, fields, setSubmitting) {
+          .then(() => {
+            alertService.success('User added successfully', { keepAfterRouteChange: true });
+            history.push('/admin/users');
+          })
+          .catch(error => {
+            setSubmitting(false);
+            alertService.error(error);
+          });
+      } else {
         accountService.update(id, fields)
-            .then(() => {
-                alertService.success('Update successful', { keepAfterRouteChange: true });
-                history.push('..');
-            })
-            .catch(error => {
-                setSubmitting(false);
-                alertService.error(error);
-            });
+          .then(() => {
+            alertService.success('Update successful', { keepAfterRouteChange: true });
+            history.push('/admin/users');
+          })
+          .catch(error => {
+            setSubmitting(false);
+            alertService.error(error);
+          });
+      }
+    },
+    handleChange: (event) => {
+      const { name, value } = event.target
+      formik.setFieldValue(name, value)
     }
+  });
 
-    return (
-        <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={onSubmit}>
-            {({ errors, touched, isSubmitting, setFieldValue }) => {
-                useEffect(() => {
-                    if (!isAddMode) {
-                        // get user and set form fields
-                        accountService.getById(id).then(user => {
-                            const fields = ['name', 'email', 'role'];
-                            fields.forEach(field => setFieldValue(field, user[field], false));
-                        });
-                    }
-                }, []);
+  useEffect(() => {
+    if (!isAddMode) {
+      accountService.getById(id).then(user => {
+        const { name, email, role } = user
+        formik.setFieldValue('name', name, false)
+        formik.setFieldValue('email', email, false)
+        formik.setFieldValue('role', role, false)
+      });
+    }
+  }, []);
 
-                return (
-                    <Form>
-                        <h1>{isAddMode ? 'Add User' : 'Edit User'}</h1>
-                        <div className="form-row">
-                            <div className="form-group col">
-                                <label>Name</label>
-                                <Field name="name" type="text" className={'form-control' + (errors.name && touched.name ? ' is-invalid' : '')} />
-                                <ErrorMessage name="name" component="div" className="invalid-feedback" />
-                            </div>
-                        </div>
+  return (
+    <Paper>
+      <Box sx={{ p: 2 }}>
+        <form onSubmit={formik.handleSubmit}>
+          <h1>{isAddMode ? 'Add' : 'Update'} User</h1>
 
-                        <div className="form-row">
-                            <div className="form-group col-7">
-                                <label>Email</label>
-                                <Field name="email" type="text" className={'form-control' + (errors.email && touched.email ? ' is-invalid' : '')} />
-                                <ErrorMessage name="email" component="div" className="invalid-feedback" />
-                            </div>
-                            <div className="form-group col">
-                                <label>Role</label>
-                                <Field name="role" as="select" className={'form-control' + (errors.role && touched.role ? ' is-invalid' : '')}>
-                                    <option value=""></option>
-                                    <option value="Organizer">Organizer</option>
-                                    <option value="Admin">Admin</option>
-                                </Field>
-                                <ErrorMessage name="role" component="div" className="invalid-feedback" />
-                            </div>
-                        </div>
-                        {!isAddMode &&
-                            <div>
-                                <h3 className="pt-3">Change Password</h3>
-                                <p>Leave blank to keep the same password</p>
-                            </div>
-                        }
-                        <div className="form-row">
-                            <div className="form-group col">
-                                <label>Password</label>
-                                <Field name="password" type="password" className={'form-control' + (errors.password && touched.password ? ' is-invalid' : '')} />
-                                <ErrorMessage name="password" component="div" className="invalid-feedback" />
-                            </div>
-                            <div className="form-group col">
-                                <label>Confirm Password</label>
-                                <Field name="confirmPassword" type="password" className={'form-control' + (errors.confirmPassword && touched.confirmPassword ? ' is-invalid' : '')} />
-                                <ErrorMessage name="confirmPassword" component="div" className="invalid-feedback" />
-                            </div>
-                        </div>
-                        <div className="form-group">
-                            <button type="submit" disabled={isSubmitting} className="btn btn-primary">
-                                {isSubmitting && <span className="spinner-border spinner-border-sm mr-1"></span>}
-                                Save
-                            </button>
-                            <Link to={isAddMode ? '.' : '..'} className="btn btn-link">Cancel</Link>
-                        </div>
-                    </Form>
-                );
-            }}
-        </Formik>
-    );
+          <Box>
+            {['name', 'email'].map((item) =>
+              <TextField
+                key={item}
+                fullWidth
+                id={item}
+                name={item}
+                label={item.charAt(0).toUpperCase() + item.slice(1)}
+                value={formik.values[item]}
+                onChange={formik.handleChange}
+                error={Boolean(formik.errors[item])}
+                helperText={formik.errors[item]}
+                type='text'
+                sx={{ m: 1, width: '25ch' }}
+              />
+            )}
+            <FormControl error={Boolean(formik.errors["role"])} sx={{ m: 1, width: '25ch' }}>
+              <InputLabel id="role-label">Role</InputLabel>
+              <Select
+                labelId="role-label"
+                id="role"
+                name="role"
+                value={formik.values["role"]}
+                label="Age"
+                onChange={formik.handleChange}
+              >
+                {Object.keys(Role).map((role) =>
+                  <MenuItem key={role} value={role}>{role}</MenuItem>
+                )}
+              </Select>
+              <FormHelperText>{formik.errors["role"]}</FormHelperText>
+            </FormControl>
+          </Box>
+          <Box>
+            {['password', 'confirmPassword'].map((item) =>
+              <TextField
+                key={item}
+                fullWidth
+                id={item}
+                name={item}
+                label={item.charAt(0).toUpperCase() + item.slice(1)}
+                value={formik.values[item]}
+                onChange={formik.handleChange}
+                error={Boolean(formik.errors[item])}
+                helperText={formik.errors[item]}
+                type='password'
+                sx={{ m: 1, width: '25ch' }}
+              />
+            )}
+          </Box>
+          <Box>
+            <small>NOTE: Leave password as blank to retain previous values.</small>
+          </Box>
+          <Box sx={{ mt: 1 }}>
+            <LoadingButton
+              variant="contained"
+              loading={formik.isSubmitting}
+              type="submit"
+            >
+              Save
+            </LoadingButton>
+            <Button
+              variant="outlined"
+              onClick={history.goBack}
+              sx={{ ml: 1 }}
+            >
+              Back
+            </Button>
+          </Box>
+        </form>
+      </Box>
+    </Paper>
+  );
 }
 
 export { AddEdit };
