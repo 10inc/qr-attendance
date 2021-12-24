@@ -1,8 +1,9 @@
-import React, {useEffect} from 'react';
-import { Route, Switch } from 'react-router-dom';
-import { AppBar, Box, Button, Toolbar } from '@mui/material';
-import { useHistory } from 'react-router-dom';
-import { Overview } from './Overview';
+import React from 'react';
+import { Route, Switch, useHistory } from 'react-router-dom';
+import { AppBar, Box, Button, Toolbar, IconButton } from '@mui/material';
+import { AssignmentOutlined as AdminIcon } from '@mui/icons-material';
+import { Details } from '@/profile'
+
 import { Users } from './users';
 import { Students } from './students';
 import { Events } from './events';
@@ -14,7 +15,16 @@ function Admin({ match }) {
   return (
     <Box>
       <AppBar position="static" sx={{ px: 1 }}>
-          <Toolbar disableGutters>
+        <Toolbar disableGutters>
+          <IconButton
+            size="large"
+            edge="end"
+            aria-label="menu"
+            sx={{ mr: 1, color: "white" }}
+            onClick={() => history.push(`${path}`)}
+          >
+            <AdminIcon />
+          </IconButton>
           {['users', 'students', 'events'].map((item) =>
             <Button
               onClick={() => history.push(`${path}/${item}`)}
@@ -23,19 +33,14 @@ function Admin({ match }) {
               {item.charAt(0).toUpperCase() + item.slice(1)}
             </Button>
           )}
-          </Toolbar>
+        </Toolbar>
       </AppBar>
       <Switch>
-        <Route exact path={path} component={Overview} />
+        <Route exact path={path} component={Details} />
         <Route path={`${path}/users`} component={Users} />
         <Route path={`${path}/students`} component={Students} />
         <Route path={`${path}/events`} component={Events} />
       </Switch>
-      {/* 
-        TODO:
-        - generic profile (optional user prop, else current user)
-        - fe for overview (my profile), users, students, events
-      */}
     </Box>
   );
 }

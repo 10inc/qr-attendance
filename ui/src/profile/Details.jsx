@@ -4,9 +4,9 @@ import { useHistory } from 'react-router-dom';
 import { Paper, Box, Button } from '@mui/material';
 import { accountService } from '@/_services';
 
-function Details({ match }) {
+function Details({ match, userId=null }) {
   const { path } = match;
-  const user = accountService.userValue;
+  const user = userId ? accountService.getById(userId) : accountService.userValue;
   const history = useHistory()
 
   return (
