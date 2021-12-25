@@ -8,6 +8,7 @@ const service = require('./event.service');
 
 // routes
 router.get('/', authorize([Role.Admin, Role.Organizer]), getAll);
+router.get('/analytics', authorize([Role.Admin, Role.Organizer]), analytics);
 router.get('/:id', authorize([Role.Admin, Role.Organizer]), getById);
 router.post('/', authorize([Role.Admin, Role.Organizer]), createSchema, create);
 router.put('/:id', authorize([Role.Admin, Role.Organizer]), updateSchema, update);
@@ -51,6 +52,12 @@ function _delete(req, res, next) {
 function attend(req, res, next) {
     service.attend(req.params.id, req.params.student_id)
         .then(() => res.json({ message: 'Student attended Event' }))
+        .catch(next);
+}
+
+function analytics(req, res, next) {
+    service.getAnalytics()
+        .then(data => res.json(data))
         .catch(next);
 }
 

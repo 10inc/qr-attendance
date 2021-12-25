@@ -39,7 +39,7 @@ require('dotenv').config()
 if (process.env.IS_FAKE_BACKEND == 'true') {
   // setup fake backend
   console.log("FAKE BACKEND ACTIVE")
-  configureFakeBackend();
+  configureFakeBackend(); // Tech Debt: Rework so it can accommodate all new routes
 }
 
 // attempt silent token refresh before startup

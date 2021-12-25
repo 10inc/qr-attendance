@@ -9,7 +9,8 @@ module.exports = {
     create,
     update,
     delete: _delete,
-    attend
+    attend,
+    getAnalytics
 };
 
 // CRUD
@@ -48,9 +49,9 @@ async function _delete(id) {
 async function attend(id, student_id) {
     const event = await db.Event.findById(id);
 
-    // if (event.attendees.includes(student_id)) {
-    //     throw 'Student is already an attendee';
-    // }
+    if (event.attendees.includes(student_id)) {
+        throw 'Student is already an attendee';
+    }
 
     event.attendees.push(student_id)
     await event.save();
@@ -72,4 +73,19 @@ async function attend(id, student_id) {
     });
 
     return event;
+}
+
+async function getAnalytics() {
+    const events = await db.Event.countDocuments({})
+    const students = await db.Student.countDocuments({})
+    const attendees = await db.Event.aggregate()
+        .group({
+            _id: '',
+            "total_attendees": { $sum: { '$size': '$attendees' } }
+        })
+    return {
+        events: events,
+        students: students,
+        attendees: attendees[0]?.total_attendees // TECH DEBT
+    }
 }

@@ -14,7 +14,8 @@ export const eventService = {
     delete: _delete,
     student: eventSubject.asObservable(),
     get studentValue () { return studentSubject.value },
-    attend
+    attend,
+    getAnalytics
 };
 
 // TODO: Can be a generic CRUD service
@@ -41,4 +42,8 @@ function _delete(id) {
 // Other
 function attend(id, student_id) {
     return fetchWrapper.post(`${baseUrl}/${id}/attend/${student_id}`, {});
+}
+
+function getAnalytics() {
+    return fetchWrapper.get(`${baseUrl}/analytics`);
 }
