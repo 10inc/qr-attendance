@@ -33,6 +33,27 @@ function TopNav({ toggle, open }) {
   );
 }
 
+function TopNavPublic() {
+  return (
+    <Box sx={{ flexGrow: 1 }}>
+      <AppBar>
+        <Toolbar>
+          <Box
+            component="img"
+            sx={{
+              height: '2.75em',
+              width: '2.75em',
+              margin: '0.5em 0.25em 0.5em 15em'
+            }}
+            alt="QR CodeIn"
+            src="/logo.png"
+          />
+        </Toolbar>
+      </AppBar>
+    </Box>
+  )
+}
+
 const PersistentAppBar = styled(AppBar, {
   shouldForwardProp: (prop) => prop !== 'open',
 })(({ theme, open }) => ({
@@ -51,4 +72,4 @@ const PersistentAppBar = styled(AppBar, {
   }),
 }));
 
-export { TopNav };
+export { TopNav, TopNavPublic };
