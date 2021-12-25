@@ -20,7 +20,7 @@ function Details({ match, userId=null }) {
         </p>
         <Button
           variant="contained"
-          onClick={() => {history.push(`${path}/update`)}}
+          onClick={() => {history.push('profile/update')}}
         >
           Update Profile
         </Button>
