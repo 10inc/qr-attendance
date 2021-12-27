@@ -1,15 +1,23 @@
 # Requirements
-- npm and NodeJS (https://nodejs.org/en/download/)
+- NodeJS > 16 (https://nodejs.org/en/download/)
 - Mongodb (https://www.mongodb.com/try/download/community)
 
 # Setup
 - Configure jwt tokens and smtp settings at `./config.json`
 - Secret is used for JWT tokens. Can be any string.
-- For emails either:
-  - Create a fake smtp service with https://mailtrap.io/ or https://ethereal.email
-    - Set env vars: `MAILTRAP_USER`, `MAILTRAP_PASS`
-  - or use a Google account with less secure apps enables
-    - Set env vars: `GOOGLE_SMTP_USER`, `GOOGLE_SMTP_PASS`
+- Set an SMTP agent in `.env`:
+  - MailTrap
+    ```
+      SMTP_CLIENT="mailtrap"
+      SMTP_USER="<INSERT YOUR CREDENTIALS>"
+      SMTP_PASS="<INSERT YOUR CREDENTIALS>"
+    ```
+  - Google Mail (personal email that accepts less secure apps)
+    ```
+      SMTP_CLIENT="gmail"
+      SMTP_USER="<INSERT GOOGLE EMAIL>"
+      SMTP_PASS="<INSERT GOOGLE PASSWORD>"
+    ```
 
 # Run the app
 - npm ci

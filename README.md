@@ -12,12 +12,15 @@ https://10inc.atlassian.net/jira/software/projects/QRA/boards/1
 - Set `PROJECT_PATH` to folder name of the app you're deploying
   - Backend: `PROJECT_PATH=api`
   - Frontend: `PROJECT_PATH=ui`
-- We have git remotes for Heroku deployments `git remote -v`:
-  - Backend: `git push heroku-be main`
-  - Frontend: `git push heroku-fe main`
+- Add Heroku remotes:
+  - `git remote add heroku-be https://git.heroku.com/qr-be.git`
+  - `git remote add heroku-fe https://git.heroku.com/qr-fe.git`
+- Confirm `git remote -v` and push changes:
+  - `git push heroku-be main`
+  - `git push heroku-fe main`
 - Heroku links
-  - Backend: https://qr-be.herokuapp.com/
-  - Frontend: https://qr-fe.herokuapp.com/
+  - https://qr-be.herokuapp.com/
+  - https://qr-fe.herokuapp.com/
 
 # Tech used
 User Management with JWT (JSON Web Tokens)
@@ -28,6 +31,15 @@ QR Code Generation
 
 Certificate Generation
 - PDFKit: https://pdfkit.org/
+
+Mailer Agent
+- NodeMailer: https://nodemailer.com/
+
+Web Components
+- MaterialUI v5: https://mui.com/
+
+Notification Toasts
+- notistack: https://iamhosseindhv.com/notistack
 
 Database
 - MongoDB: https://www.mongodb.com/try/download/community
