@@ -6,21 +6,41 @@ module.exports = {
 }
 
 async function eventParticipation(event, student) {
-  var doc = new PDFDocument({ bufferPages: true });
+  var doc = new PDFDocument({ bufferPages: true })
 
+  doc.image('images/cert_top.png', 12, 0, { width: 600 })
+  doc.moveDown(16);
   doc
-    .fontSize(25)
-    .text('Certificate of Participation!', 100, 100);
-
+    .font('Helvetica').fontSize(12)
+    .text('THIS CERTIFICATE IS HEREBY AWARDED TO', { align: 'center' })
+  doc.moveDown(1.5)
+  doc.fillColor('#04a5db')
   doc
-    .fontSize(22)
-    .text(`${student.name} attended ${event.name}`);
+    .font('Helvetica-Bold').fontSize(26)
+    .text(student.name.toUpperCase(), { align: 'center' })
 
+  doc.fillColor('black')
+  doc.moveDown(2.5)
   doc
-    .fontSize(18)
-    .text(`${event.date}`);
+    .font('Helvetica').fontSize(12)
+    .text('Actively and successfully participated in', { align: 'center' })
+  doc.moveDown(1.5)
+  doc
+    .font('Helvetica-Bold').fontSize(12)
+    .text(event.name, { align: 'center' })
 
-  doc.end();
+  doc.moveDown(1.5)
+  doc
+    .font('Helvetica').fontSize(12)
+    .text('on the date of', { align: 'center' })
+  doc.moveDown(1.5)
+  doc
+    .font('Helvetica-Bold').fontSize(12)
+    .text(new Date(event.date).toLocaleDateString("fr-CA"), { align: 'center'})
+
+  doc.image('images/cert_bottom.png', 0, doc.page.height - 209, { width: 600 })
+
+  doc.end()
 
   return doc
 }
