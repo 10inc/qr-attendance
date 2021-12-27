@@ -26,6 +26,10 @@ function Details({ match }) {
   }, []);
 
   function attendEvent() {
+    if (!attendee) {
+      enqueueSnackbar("Must select a Student.", { 'variant': 'error' })
+      return
+    }
     setSubmitting(true)
     eventService.attend(id, attendee)
       .then(() => {
@@ -47,7 +51,7 @@ function Details({ match }) {
             <h1>Event Details</h1>
             <p>
               <strong>Name: </strong>{event?.name}<br />
-              <strong>Date: </strong>{event?.date}<br />
+              <strong>Date: </strong>{event?.date && new Date(event.date).toLocaleDateString("fr-CA")}<br />
               <strong>Attendees: </strong>{event?.attendees?.length}
             </p>
             <Button

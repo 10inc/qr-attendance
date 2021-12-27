@@ -50,7 +50,10 @@ function startApp() {
   render(
     <Router history={history}>
       <ThemeProvider theme={theme}>
-        <SnackbarProvider maxSnack={5} anchorOrigin={{ horizontal: "center", vertical: "top" }} >
+        <SnackbarProvider
+          maxSnack={5} autoHideDuration={3000}
+          anchorOrigin={{ horizontal: "center", vertical: "top" }}
+        >
           <App />
         </SnackbarProvider>
       </ThemeProvider>
