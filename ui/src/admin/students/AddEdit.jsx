@@ -51,8 +51,6 @@ function AddEdit({ history, match }) {
         studentService.update(id, fields)
           .then(() => {
             enqueueSnackbar('Update successful', { 'variant': 'success' })
-
-            enqueueSnackbar('', { 'variant': 'success' })
             history.push(`/admin/students/${id}`);
           })
           .catch(error => {
@@ -117,7 +115,7 @@ function AddEdit({ history, match }) {
             </LoadingButton>
             <Button
               variant="outlined"
-              onClick={history.goBack}
+              onClick={() => history.push('/admin/students/')}
               sx={{ ml: 1 }}
             >
               Back

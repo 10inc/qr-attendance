@@ -142,7 +142,7 @@ function AddEdit({ history, match }) {
             </LoadingButton>
             <Button
               variant="outlined"
-              onClick={history.goBack}
+              onClick={() => history.push('/admin/events/')}
               sx={{ ml: 1 }}
             >
               Back
