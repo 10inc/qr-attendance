@@ -2,6 +2,7 @@ import React from 'react';
 import { styled } from '@mui/material/styles';
 import { AppBar, Box, Toolbar, IconButton } from '@mui/material';
 import { Menu as MenuIcon, AccountCircle as UserIcon } from '@mui/icons-material';
+import { useHistory } from 'react-router-dom';
 
 function TopNav({ toggle, open }) {
   return (
@@ -34,6 +35,7 @@ function TopNav({ toggle, open }) {
 }
 
 function TopNavPublic() {
+  const history = useHistory()
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar>
@@ -43,10 +45,12 @@ function TopNavPublic() {
             sx={{
               height: '2.75em',
               width: '2.75em',
-              margin: '0.5em 0.25em 0.5em 15em'
+              margin: '0.5em 0.25em 0.5em 15em',
+              cursor: 'pointer'
             }}
             alt="QR CodeIn"
             src="/logo.png"
+            onClick={() => history.push('/')}
           />
         </Toolbar>
       </AppBar>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Box, CircularProgress  } from '@mui/material';
+import { Box, CircularProgress } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
 import config from 'config';
@@ -22,22 +22,30 @@ function App() {
     setOpen(!open)
   }
 
-  if(loading) return <CircularProgress className="loader" />
+  if (loading) return <CircularProgress className="loader" />
   return (
     <div className={'app-container' + (user && ' bg-light')}>
-      <Box>
-        {(user && Object.keys(user).length) && (
-          <React.Fragment>
-            <SideBar open={open} toggle={toggleOpen} />
-            <TopNav open={open} toggle={toggleOpen} />
-          </React.Fragment>
-        )}
-        {!(user && Object.keys(user).length) && <TopNavPublic />}
-        <Main open={open}>
-          <Alert />
-          <Routes />
-        </Main>
-      </Box>
+
+      {(user && Object.keys(user).length) && (
+        <Box>
+          <SideBar open={open} toggle={toggleOpen} />
+          <TopNav open={open} toggle={toggleOpen} />
+          <Main open={open}>
+            <Alert />
+            <Routes />
+          </Main>
+        </Box>
+      )}
+      {!(user && Object.keys(user).length) && (
+        <Box sx={{ marginTop: '4%', px: '30%' }}>
+          <TopNavPublic />
+          <Box>
+            <Alert />
+            <Routes />
+          </Box>
+        </Box>
+      )}
+
     </div>
   );
 }

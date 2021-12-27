@@ -1,85 +1,116 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Formik, Field, Form, ErrorMessage } from 'formik';
+import { useFormik } from 'formik';
 import * as Yup from 'yup';
+import { Paper, Box, Button, TextField } from '@mui/material';
+import { LoadingButton } from '@mui/lab';
 
 import { accountService, alertService } from '@/_services';
 
 function Register({ history }) {
-    const initialValues = {
-        name: '',
-        email: '',
-        password: '',
-        confirmPassword: ''
-    };
+  const initialValues = {
+    name: '',
+    email: '',
+    password: '',
+    confirmPassword: ''
+  };
 
-    const validationSchema = Yup.object().shape({
-        name: Yup.string()
-            .required('Name is required'),
-        email: Yup.string()
-            .email('Email is invalid')
-            .required('Email is required'),
-        password: Yup.string()
-            .min(6, 'Password must be at least 6 characters')
-            .required('Password is required'),
-        confirmPassword: Yup.string()
-            .oneOf([Yup.ref('password'), null], 'Passwords must match')
-            .required('Confirm Password is required')
-    });
+  const validationSchema = Yup.object().shape({
+    name: Yup.string()
+      .required('Name is required'),
+    email: Yup.string()
+      .email('Email is invalid')
+      .required('Email is required'),
+    password: Yup.string()
+      .min(6, 'Password must be at least 6 characters')
+      .required('Password is required'),
+    confirmPassword: Yup.string()
+      .oneOf([Yup.ref('password'), null], 'Passwords must match')
+      .required('Confirm Password is required')
+  });
 
-    function onSubmit(fields, { setStatus, setSubmitting }) {
-        setStatus();
-        accountService.register(fields)
-            .then(() => {
-                alertService.success('Registration successful, please check your email for verification instructions', { keepAfterRouteChange: true });
-                history.push('login');
-            })
-            .catch(error => {
-                setSubmitting(false);
-                alertService.error(error);
-            });
+  const formik = useFormik({
+    initialValues: initialValues,
+    validationSchema: validationSchema,
+    onSubmit: (fields, { setSubmitting }) => {
+      setSubmitting(true)
+      accountService.register(fields)
+        .then(() => {
+          alertService.success('Registration successful, please check your email for verification instructions', { keepAfterRouteChange: true });
+          history.push('login');
+        })
+        .catch(error => {
+          setSubmitting(false);
+          alertService.error(error);
+        });
+    },
+    handleChange: (event) => {
+      const { name, value } = event.target
+      formik.setFieldValue(name, value)
     }
+  });
 
-    return (
-        <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={onSubmit}>
-            {({ errors, touched, isSubmitting }) => (
-                <Form className="shadow">
-                    <h3 className="card-header">Register</h3>
-                    <div className="card-body">
-                        <div className="form-group">
-                            <label>Name</label>
-                            <Field name="name" type="text" className={'form-control' + (errors.name && touched.name ? ' is-invalid' : '')} />
-                            <ErrorMessage name="name" component="div" className="invalid-feedback" />
-                        </div>
-                        <div className="form-group">
-                            <label>Email</label>
-                            <Field name="email" type="text" className={'form-control' + (errors.email && touched.email ? ' is-invalid' : '')} />
-                            <ErrorMessage name="email" component="div" className="invalid-feedback" />
-                        </div>
-                        <div className="form-row">
-                            <div className="form-group col">
-                                <label>Password</label>
-                                <Field name="password" type="password" className={'form-control' + (errors.password && touched.password ? ' is-invalid' : '')} />
-                                <ErrorMessage name="password" component="div" className="invalid-feedback" />
-                            </div>
-                            <div className="form-group col">
-                                <label>Confirm Password</label>
-                                <Field name="confirmPassword" type="password" className={'form-control' + (errors.confirmPassword && touched.confirmPassword ? ' is-invalid' : '')} />
-                                <ErrorMessage name="confirmPassword" component="div" className="invalid-feedback" />
-                            </div>
-                        </div>
-                        <div className="form-group">
-                            <button type="submit" disabled={isSubmitting} className="btn btn-primary">
-                                {isSubmitting && <span className="spinner-border spinner-border-sm mr-1"></span>}
-                                Register
-                            </button>
-                            <Link to="login" className="btn btn-link">Cancel</Link>
-                        </div>
-                    </div>
-                </Form>
+  return (
+    <Paper>
+      <Box sx={{ p: 2 }}>
+        <form onSubmit={formik.handleSubmit}>
+          <h1>Register</h1>
+
+          <Box>
+            {['name', 'email'].map((item) =>
+              <TextField
+                key={item}
+                fullWidth
+                id={item}
+                name={item}
+                label={item.charAt(0).toUpperCase() + item.slice(1)}
+                value={formik.values[item]}
+                onChange={formik.handleChange}
+                error={Boolean(formik.errors[item])}
+                helperText={formik.errors[item]}
+                type='text'
+                sx={{ m: 1, width: '25ch' }}
+              />
             )}
-        </Formik>
-    )
+          </Box>
+          <Box>
+            {['password', 'confirmPassword'].map((item) =>
+              <TextField
+                key={item}
+                fullWidth
+                id={item}
+                name={item}
+                label={item.charAt(0).toUpperCase() + item.slice(1)}
+                value={formik.values[item]}
+                onChange={formik.handleChange}
+                error={Boolean(formik.errors[item])}
+                helperText={formik.errors[item]}
+                type='password'
+                sx={{ m: 1, width: '25ch' }}
+              />
+            )}
+          </Box>
+
+          <Box sx={{ mt: 1 }}>
+            <LoadingButton
+              variant="contained"
+              loading={formik.isSubmitting}
+              type="submit"
+            >
+              Save
+            </LoadingButton>
+            <Button
+              variant="outlined"
+              onClick={() => history.push('/account/login')}
+              sx={{ ml: 1 }}
+            >
+              Back
+            </Button>
+          </Box>
+        </form>
+      </Box>
+    </Paper>
+  )
 }
 
 export { Register }; 

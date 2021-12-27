@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { 
+import {
   Box, Paper, Grid, Divider,
   List, ListItem, ListItemText, ListItemButton,
 } from '@mui/material';
@@ -29,7 +29,7 @@ export function AdminHome() {
         <Grid item xs={4}>
           <Paper>
             <Box sx={{ p: 2, position: 'relative' }}>
-              <h2>{data?.students || '?'}</h2>
+              <h2>{data?.students || '-'}</h2>
               <h3>Students Listed</h3>
               <StudentIcon className="dashboard-icon" fontSize="large" />
             </Box>
@@ -39,7 +39,7 @@ export function AdminHome() {
         <Grid item xs={4}>
           <Paper>
             <Box sx={{ p: 2, position: 'relative' }}>
-              <h2>{data?.events || '?'}</h2>
+              <h2>{data?.events || '-'}</h2>
               <h3>Events Listed</h3>
               <EventIcon className="dashboard-icon" fontSize="large" />
             </Box>
@@ -49,7 +49,7 @@ export function AdminHome() {
         <Grid item xs={4}>
           <Paper>
             <Box sx={{ p: 2, position: 'relative' }}>
-              <h2>{data?.attendees || '?'}</h2>
+              <h2>{data?.attendees || '-'}</h2>
               <h3>Certificates Generated</h3>
               <CertificateIcon className="dashboard-icon" fontSize="large" />
             </Box>
