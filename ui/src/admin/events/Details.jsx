@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { useHistory } from 'react-router-dom';
 import {
-  Paper, Box, Button, TextField, Grid,
-  FormControl, FormHelperText, InputLabel, Select, MenuItem
+  Paper, Box, Button, Grid, CircularProgress,
+  FormControl, InputLabel, Select, MenuItem
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import { useSnackbar } from 'notistack';
@@ -16,10 +15,14 @@ function Details({ match }) {
   const [students, setStudents] = useState([]);
   const [attendee, setAttendee] = useState('');
   const [isSubmitting, setSubmitting] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     eventService.getById(id).then(setEvent);
-    studentService.getAll().then(setStudents)
+    studentService.getAll().then((res) => {
+      setStudents(res)
+      setLoading(false)
+    })
   }, []);
 
   function attendEvent() {
@@ -35,7 +38,7 @@ function Details({ match }) {
         setSubmitting(false)
       });
   }
-
+  if (loading) return <CircularProgress className="loader" />
   return (
     <Paper>
       <Grid container>

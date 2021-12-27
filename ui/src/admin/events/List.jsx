@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
-import { Paper, Box, Button, Table, TableHead, TableRow, TableCell, TableBody } from '@mui/material';
+import { Paper, Box, Button, CircularProgress,
+  Table, TableHead, TableRow, TableCell, TableBody
+} from '@mui/material';
 import { useSnackbar } from 'notistack';
 
 import { TableActions } from '@/_components';
@@ -11,9 +13,13 @@ function List({ match }) {
   const history = useHistory();
   const { enqueueSnackbar } = useSnackbar();
   const [events, setEvents] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    eventService.getAll().then(setEvents);
+    eventService.getAll().then((res) => {
+      setEvents(res)
+      setLoading(false)
+    });
   }, []);
 
   function deleteEvent(id) {
@@ -30,7 +36,7 @@ function List({ match }) {
         enqueueSnackbar(error, { 'variant': 'error' })
       });
   }
-
+  if (loading) return <CircularProgress className="loader" />
   return (
     <Paper>
       <Box sx={{ p: 2 }}>

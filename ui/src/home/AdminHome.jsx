@@ -102,5 +102,5 @@ export function AdminHome() {
         </Grid>
       </Grid>
     </React.Fragment>
-      );
-    }
+  );
+}

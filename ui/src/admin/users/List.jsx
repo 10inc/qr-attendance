@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
-import { Paper, Box, Button, Table, TableHead, TableRow, TableCell, TableBody } from '@mui/material';
+import { Paper, Box, Button, CircularProgress,
+  Table, TableHead, TableRow, TableCell, TableBody
+} from '@mui/material';
 import { useSnackbar } from 'notistack';
 
 import { TableActions } from '@/_components';
@@ -11,9 +13,13 @@ function List({ match }) {
   const history = useHistory()
   const { enqueueSnackbar } = useSnackbar();
   const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    accountService.getAll().then(setUsers);
+    accountService.getAll().then((res) => {
+      setUsers(res)
+      setLoading(false)
+    });
   }, []);
 
   function deleteUser(id) {
@@ -31,8 +37,8 @@ function List({ match }) {
       });
   }
 
+  if (loading) return <CircularProgress className="loader" />
   return (
-
     <Paper>
       <Box sx={{ p: 2 }}>
         <h1>Users</h1>

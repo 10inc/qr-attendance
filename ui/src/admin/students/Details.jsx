@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
-import { Paper, Box, Button, Grid } from '@mui/material';
+import { Paper, Box, Button, Grid, CircularProgress } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import { useSnackbar } from 'notistack';
 var QRCode = require('qrcode.react');
@@ -13,10 +13,12 @@ function Details({ match }) {
   const { enqueueSnackbar } = useSnackbar();
   const [student, setStudent] = useState({});
   const [isSubmitting, setSubmitting] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     studentService.getById(id).then(result => {
       setStudent(result)
+      setLoading(false)
     })
   }, []);
 
@@ -32,7 +34,7 @@ function Details({ match }) {
         setSubmitting(false)
       })
   }
-
+  if (loading) return <CircularProgress className="loader" />
   return (
     <Paper>
       <Grid container>

@@ -1,7 +1,7 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import { Paper, Box, Button, TextField } from '@mui/material';
+import { Paper, Box, Button, TextField, CircularProgress } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import { useSnackbar } from 'notistack';
 
@@ -11,6 +11,7 @@ function AddEdit({ history, match }) {
   const { id } = match.params;
   const isAddMode = !id;
   const { enqueueSnackbar } = useSnackbar();
+  const [loading, setLoading] = useState(true);
 
   const initialValues = {
     name: '',
@@ -74,10 +75,14 @@ function AddEdit({ history, match }) {
         formik.setFieldValue('email', email, false)
         formik.setFieldValue('section', section, false)
         formik.setFieldValue('year', year, false)
+        setLoading(false)
       });
+    } else {
+      setLoading(false)
     }
   }, []);
 
+  if (loading) return <CircularProgress className="loader" />
   return (
     <Paper>
       <Box sx={{ p: 2 }}>

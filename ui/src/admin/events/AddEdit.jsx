@@ -2,10 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import {
-  Paper, Box, Button, TextField,
+  Paper, Box, Button, TextField, CircularProgress,
   FormControl, FormHelperText, InputLabel, Select, MenuItem
 } from '@mui/material';
-import { LoadingButton, MobileDatePicker } from '@mui/lab';
+import { LoadingButton } from '@mui/lab';
 import { eventService, studentService } from '@/_services';
 import { useSnackbar } from 'notistack';
 
@@ -14,6 +14,7 @@ function AddEdit({ history, match }) {
   const isAddMode = !id;
   const { enqueueSnackbar } = useSnackbar();
   const [students, setStudents] = useState([])
+  const [loading, setLoading] = useState(true);
   const initialValues = {
     name: '',
     date: '',
@@ -70,9 +71,12 @@ function AddEdit({ history, match }) {
         formik.setFieldValue('date', new Date(date).toLocaleDateString("fr-CA"))
       });
     }
-    studentService.getAll().then(setStudents)
+    studentService.getAll().then((res) => {
+      setStudents(res)
+      setLoading(false)
+    })
   }, []);
-
+  if (loading) return <CircularProgress className="loader" />
   return (
     <Paper>
       <Box sx={{ p: 2 }}>

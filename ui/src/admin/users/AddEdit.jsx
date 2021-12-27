@@ -1,8 +1,8 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { 
-  Paper, Box, Button, TextField,
+  Paper, Box, Button, TextField, CircularProgress,
   FormControl, FormHelperText, InputLabel, Select, MenuItem
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
@@ -23,6 +23,7 @@ function AddEdit({ history, match }) {
     confirmPassword: ''
   };
 
+  const [loading, setLoading] = useState(true);
   const validationSchema = Yup.object().shape({
     name: Yup.string()
       .required('Name is required'),
@@ -82,10 +83,14 @@ function AddEdit({ history, match }) {
         formik.setFieldValue('name', name, false)
         formik.setFieldValue('email', email, false)
         formik.setFieldValue('role', role, false)
+        setLoading(false)
       });
+    } else {
+      setLoading(false)
     }
   }, []);
 
+  if (loading) return <CircularProgress className="loader" />
   return (
     <Paper>
       <Box sx={{ p: 2 }}>
