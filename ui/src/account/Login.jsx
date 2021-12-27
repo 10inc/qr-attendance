@@ -3,10 +3,12 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { Paper, Box, Button, TextField, AppBar } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
+import { useSnackbar } from 'notistack';
 
-import { accountService, alertService } from '@/_services';
+import { accountService } from '@/_services';
 
 function Login({ history, location }) {
+  const { enqueueSnackbar } = useSnackbar();
   const initialValues = {
     email: '',
     password: ''
@@ -26,7 +28,6 @@ function Login({ history, location }) {
       const { email, password } = fields
       setSubmitting(true)
 
-      alertService.clear();
       accountService.login(email, password)
         .then(() => {
           const { from } = location.state || { from: { pathname: "/" } };
@@ -34,7 +35,7 @@ function Login({ history, location }) {
         })
         .catch(error => {
           setSubmitting(false);
-          alertService.error(error);
+          enqueueSnackbar(error, { 'variant': 'error' });
         });
     },
     handleChange: (event) => {

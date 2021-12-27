@@ -2,13 +2,15 @@ import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Paper, Box, Button, Grid } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
+import { useSnackbar } from 'notistack';
 var QRCode = require('qrcode.react');
 
-import { studentService, alertService } from '@/_services';
+import { studentService } from '@/_services';
 
 function Details({ match }) {
   const { params: { id } } = match
   const history = useHistory()
+  const { enqueueSnackbar } = useSnackbar();
   const [student, setStudent] = useState({});
   const [isSubmitting, setSubmitting] = useState(false);
 
@@ -22,11 +24,11 @@ function Details({ match }) {
     setSubmitting(true)
     studentService.emailQr(id)
       .then(result => {
-        alertService.success(result.message);
+        enqueueSnackbar(result.message, { 'variant': 'success' })
         setSubmitting(false)
       })
-      .catch(error => {
-        alertService.error("Something went wrong with sending the email");
+      .catch(() => {
+        enqueueSnackbar('Something went wrong with sending the email', { 'variant': 'error' })
         setSubmitting(false)
       })
   }

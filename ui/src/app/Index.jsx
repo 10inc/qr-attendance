@@ -3,7 +3,7 @@ import { Box, CircularProgress } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
 import config from 'config';
-import { TopNav, TopNavPublic, SideBar, Alert } from '@/_components';
+import { TopNav, TopNavPublic, SideBar } from '@/_components';
 import { accountService } from '@/_services';
 import { Routes } from './Routes'
 
@@ -31,7 +31,6 @@ function App() {
           <SideBar open={open} toggle={toggleOpen} />
           <TopNav open={open} toggle={toggleOpen} />
           <Main open={open}>
-            <Alert />
             <Routes />
           </Main>
         </Box>
@@ -39,10 +38,7 @@ function App() {
       {!(user && Object.keys(user).length) && (
         <Box sx={{ marginTop: '6%', px: '30%' }}>
           <TopNavPublic />
-          <Box>
-            <Alert />
-            <Routes />
-          </Box>
+          <Routes />
         </Box>
       )}
 

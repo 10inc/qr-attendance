@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Paper, Box, Button, Table, TableHead, TableRow, TableCell, TableBody } from '@mui/material';
+import { useSnackbar } from 'notistack';
 
 import { TableActions } from '@/_components';
-import { studentService, alertService } from '@/_services';
+import { studentService } from '@/_services';
 
 function List({ match }) {
   const { path } = match;
   const history = useHistory()
+  const { enqueueSnackbar } = useSnackbar();
   const [students, setStudents] = useState([]);
 
   useEffect(() => {
@@ -22,10 +24,10 @@ function List({ match }) {
     studentService.delete(id)
       .then(() => {
         setStudents(students => students.filter(x => x.id !== id));
-        alertService.success('Student deleted successfully', { keepAfterRouteChange: true });
+        enqueueSnackbar('Student deleted successfully', { 'variant': 'success' })
       })
       .catch(error => {
-        alertService.error(error);
+        enqueueSnackbar(error, { 'variant': 'error' })
       });
   }
 

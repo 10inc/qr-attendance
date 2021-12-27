@@ -4,11 +4,13 @@ import * as Yup from 'yup';
 import { AppBar, Paper, Box, Button, TextField } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import { useHistory } from 'react-router-dom';
+import { useSnackbar } from 'notistack';
 
-import { accountService, alertService } from '@/_services';
+import { accountService } from '@/_services';
 
 function ForgotPassword() {
   const history = useHistory()
+  const { enqueueSnackbar } = useSnackbar();
   const initialValues = {
     email: ''
   };
@@ -24,10 +26,9 @@ function ForgotPassword() {
     validationSchema: validationSchema,
     onSubmit: (fields, { setSubmitting }) => {
       const { email } = fields
-      alertService.clear();
       accountService.forgotPassword(email)
-        .then(() => alertService.success('Please check your email for password reset instructions'))
-        .catch(error => alertService.error(error))
+        .then(() => enqueueSnackbar('Please check your email for password reset instructions', { 'variant': 'success' }))
+        .catch(error => enqueueSnackbar(error, { 'variant': 'error' }))
         .finally(() => setSubmitting(false));
     },
     handleChange: (event) => {

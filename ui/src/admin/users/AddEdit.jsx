@@ -6,13 +6,15 @@ import {
   FormControl, FormHelperText, InputLabel, Select, MenuItem
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
+import { useSnackbar } from 'notistack';
 
 import { Role } from '@/_helpers';
-import { accountService, alertService } from '@/_services';
+import { accountService } from '@/_services';
 
 function AddEdit({ history, match }) {
   const { id } = match.params;
   const isAddMode = !id;
+  const { enqueueSnackbar } = useSnackbar();
   const initialValues = {
     name: '',
     email: '',
@@ -48,22 +50,22 @@ function AddEdit({ history, match }) {
       if (isAddMode) {
         accountService.create(fields)
           .then(() => {
-            alertService.success('User added successfully', { keepAfterRouteChange: true });
+            enqueueSnackbar('User added successfully', { 'variant': 'success' })
             history.push('/admin/users');
           })
           .catch(error => {
             setSubmitting(false);
-            alertService.error(error);
+            enqueueSnackbar(error, { 'variant': 'error' })
           });
       } else {
         accountService.update(id, fields)
           .then(() => {
-            alertService.success('Update successful', { keepAfterRouteChange: true });
+            enqueueSnackbar('Update successful', { 'variant': 'success' })
             history.push('/admin/users');
           })
           .catch(error => {
             setSubmitting(false);
-            alertService.error(error);
+            enqueueSnackbar(error, { 'variant': 'error' })
           });
       }
     },

@@ -2,6 +2,7 @@ import React from 'react';
 import { Router } from 'react-router-dom';
 import { render } from 'react-dom';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
+import { SnackbarProvider } from 'notistack';
 
 import { history, configureFakeBackend } from './_helpers';
 import { accountService } from './_services';
@@ -49,7 +50,9 @@ function startApp() {
   render(
     <Router history={history}>
       <ThemeProvider theme={theme}>
-        <App />
+        <SnackbarProvider maxSnack={5} anchorOrigin={{ horizontal: "center", vertical: "top" }} >
+          <App />
+        </SnackbarProvider>
       </ThemeProvider>
     </Router>,
     document.getElementById('app')

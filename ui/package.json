@@ -23,6 +23,7 @@
         "express": "*",
         "formik": "^2.1.4",
         "history": "^4.10.1",
+        "notistack": "^2.0.3",
         "prop-types": "^15.7.2",
         "qrcode.react": "^1.0.1",
         "query-string": "^6.11.0",

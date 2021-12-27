@@ -21,7 +21,7 @@ export function AdminHome() {
   useEffect(() => {
     eventService.getAnalytics().then(setData);
     eventService.getAll().then(setEvents);
-  }, {});
+  }, []);
 
   return (
     <React.Fragment>
@@ -65,7 +65,7 @@ export function AdminHome() {
               <List>
                 {events.filter(e => new Date(e.date) >= new Date()).map(event => {
                   return (
-                    <React.Fragment>
+                    <React.Fragment key={event.id}>
                       <ListItem disablePadding>
                         <ListItemButton onClick={() => history.push(`admin/events/${event.id}`)}>
                           <ListItemText primary={event.name} />
@@ -86,7 +86,7 @@ export function AdminHome() {
               <List>
                 {events.filter(e => new Date(e.date) < new Date()).map(event => {
                   return (
-                    <React.Fragment>
+                    <React.Fragment key={event.id}>
                       <ListItem disablePadding>
                         <ListItemButton onClick={() => history.push(`admin/events/${event.id}`)}>
                           <ListItemText primary={event.name} />

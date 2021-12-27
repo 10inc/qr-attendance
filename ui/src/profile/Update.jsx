@@ -4,12 +4,14 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { Paper, Box, Button, TextField } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
+import { useSnackbar } from 'notistack';
 
-import { accountService, alertService } from '@/_services';
+import { accountService } from '@/_services';
 
 function Update({}) {
   const user = accountService.userValue;
   const history = useHistory()
+  const { enqueueSnackbar } = useSnackbar();
   const initialValues = {
     name: user.name,
     email: user.email,
@@ -40,12 +42,12 @@ function Update({}) {
       accountService.update(user.id, fields)
         .then(() => {
           setSubmitting(false)
-          alertService.success('Update successful', { keepAfterRouteChange: true });
+          enqueueSnackbar('Update successful', { 'variant': 'success' })
           history.push('.');
         })
         .catch(error => {
           setSubmitting(false)
-          alertService.error(error);
+          enqueueSnackbar(error, { 'variant': 'error' })
         })
     },
     handleChange: (event) => {
@@ -60,7 +62,7 @@ function Update({}) {
     if (confirm('Are you sure?')) {
       setIsDeleting(true);
       accountService.delete(user.id)
-        .then(() => alertService.success('Account deleted successfully'));
+        .then(() => enqueueSnackbar('Account deleted successfully', { 'variant': 'success' }))
     }
   }
 

@@ -3,10 +3,13 @@ import { Link } from 'react-router-dom';
 import queryString from 'query-string';
 import { Formik, Field, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
+import { useSnackbar } from 'notistack';
 
-import { accountService, alertService } from '@/_services';
+import { accountService } from '@/_services';
 
 function ResetPassword({ history }) {
+    const { enqueueSnackbar } = useSnackbar();
+
     const TokenStatus = {
         Validating: 'Validating',
         Valid: 'Valid',
@@ -48,15 +51,14 @@ function ResetPassword({ history }) {
         });
 
         function onSubmit({ password, confirmPassword }, { setSubmitting }) {
-            alertService.clear();
             accountService.resetPassword({ token, password, confirmPassword })
                 .then(() => {
-                    alertService.success('Password reset successful, you can now login', { keepAfterRouteChange: true });
+                    enqueueSnackbar('Password reset successful, you can now login', { 'variant': 'success' })
                     history.push('login');
                 })
                 .catch(error => {
                     setSubmitting(false);
-                    alertService.error(error);
+                    enqueueSnackbar(error, { 'variant': 'error' });
                 });
         }
 

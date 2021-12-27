@@ -6,11 +6,13 @@ import {
   FormControl, FormHelperText, InputLabel, Select, MenuItem
 } from '@mui/material';
 import { LoadingButton, MobileDatePicker } from '@mui/lab';
-import { eventService, alertService, studentService } from '@/_services';
+import { eventService, studentService } from '@/_services';
+import { useSnackbar } from 'notistack';
 
 function AddEdit({ history, match }) {
   const { id } = match.params;
   const isAddMode = !id;
+  const { enqueueSnackbar } = useSnackbar();
   const [students, setStudents] = useState([])
   const initialValues = {
     name: '',
@@ -35,22 +37,22 @@ function AddEdit({ history, match }) {
       if (isAddMode) {
         eventService.create(fields)
           .then((res) => {
-            alertService.success('Event added successfully', { keepAfterRouteChange: true });
+            enqueueSnackbar('Event added successfully', { 'variant': 'success' })
             history.push(res?.id ? `/admin/events/${res.id}` : `/admin/events`);
           })
           .catch(error => {
             setSubmitting(false);
-            alertService.error(error);
+            enqueueSnackbar(error, { 'variant': 'error' });
           });
       } else {
         eventService.update(id, fields)
           .then(() => {
-            alertService.success('Update successful', { keepAfterRouteChange: true });
+            enqueueSnackbar('Update successful', { 'variant': 'success' })
             history.push(`/admin/events/${id}`);
           })
           .catch(error => {
             setSubmitting(false);
-            alertService.error(error);
+            enqueueSnackbar(error, { 'variant': 'error' });
           });
       }
     },

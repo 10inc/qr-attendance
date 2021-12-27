@@ -5,11 +5,13 @@ import {
   FormControl, FormHelperText, InputLabel, Select, MenuItem
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
+import { useSnackbar } from 'notistack';
 
-import { eventService, studentService, alertService } from '@/_services';
+import { eventService, studentService } from '@/_services';
 
 function Details({ match }) {
   const { params: { id } } = match;
+  const { enqueueSnackbar } = useSnackbar();
   const [event, setEvent] = useState({});
   const [students, setStudents] = useState([]);
   const [attendee, setAttendee] = useState('');
@@ -25,11 +27,11 @@ function Details({ match }) {
     eventService.attend(id, attendee)
       .then(() => {
         eventService.getById(id).then(result => setEvent(result));
-        alertService.success("Successfully added a Student as an Event Attendee");
+        enqueueSnackbar('Successfully added a Student as an Event Attendee', { 'variant': 'success' })
         setSubmitting(false)
       })
       .catch(error => {
-        alertService.error(error);
+        enqueueSnackbar(error, { 'variant': 'error' })
         setSubmitting(false)
       });
   }

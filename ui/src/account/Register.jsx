@@ -3,10 +3,11 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { AppBar, Paper, Box, Button, TextField } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
-
-import { accountService, alertService } from '@/_services';
+import { useSnackbar } from 'notistack';
+import { accountService } from '@/_services';
 
 function Register({ history }) {
+  const { enqueueSnackbar } = useSnackbar();
   const initialValues = {
     name: '',
     email: '',
@@ -35,12 +36,15 @@ function Register({ history }) {
       setSubmitting(true)
       accountService.register(fields)
         .then(() => {
-          alertService.success('Registration successful, please check your email for verification instructions', { keepAfterRouteChange: true });
+          enqueueSnackbar(
+            'Registration successful, please check your email for verification instructions',
+            { 'variant': 'success' }
+          )
           history.push('login');
         })
         .catch(error => {
           setSubmitting(false);
-          alertService.error(error);
+          enqueueSnackbar(error, { 'variant': 'error' })
         });
     },
     handleChange: (event) => {
@@ -92,7 +96,7 @@ function Register({ history }) {
               )}
             </Box>
 
-            <Box sx={{ mt: 4 }}>
+            <Box sx={{ mt: 3 }}>
               <LoadingButton
                 variant="contained"
                 loading={formik.isSubmitting}

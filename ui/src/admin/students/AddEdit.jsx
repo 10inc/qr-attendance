@@ -3,12 +3,14 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { Paper, Box, Button, TextField } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
+import { useSnackbar } from 'notistack';
 
-import { studentService, alertService } from '@/_services';
+import { studentService } from '@/_services';
 
 function AddEdit({ history, match }) {
   const { id } = match.params;
   const isAddMode = !id;
+  const { enqueueSnackbar } = useSnackbar();
 
   const initialValues = {
     name: '',
@@ -37,22 +39,24 @@ function AddEdit({ history, match }) {
       if (isAddMode) {
         studentService.create(fields)
           .then((res) => {
-            alertService.success('Student added successfully', { keepAfterRouteChange: true });
+            enqueueSnackbar('Student added successfully', { 'variant': 'success' })
             history.push(res?.id ? `/admin/students/${res.id}` : `/admin/students`);
           })
           .catch(error => {
             setSubmitting(false);
-            alertService.error(error);
+            enqueueSnackbar(error, { 'variant': 'error' })
           });
       } else {
         studentService.update(id, fields)
           .then(() => {
-            alertService.success('Update successful', { keepAfterRouteChange: true });
+            enqueueSnackbar('Update successful', { 'variant': 'success' })
+
+            enqueueSnackbar('', { 'variant': 'success' })
             history.push(`/admin/students/${id}`);
           })
           .catch(error => {
             setSubmitting(false);
-            alertService.error(error);
+            enqueueSnackbar(error, { 'variant': 'error' })
           });
       }
     },
