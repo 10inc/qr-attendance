@@ -56,13 +56,16 @@ export function SideBar({ open, toggle }) {
         color: 'white',
         height: '100%',
       }}>
-        <Box sx={{ display: 'flex' }}>
+        <Box
+          sx={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}
+          onClick={() => history.push('/')}
+        >
           <Box
             component="img"
             sx={{
-              height: '3.75em',
-              width: '3.75em',
-              margin: '0.5em 0.25em'
+              height: '3em',
+              width: '3em',
+              margin: '0.5em'
             }}
             alt="QR CodeIn"
             src="/logo.png"

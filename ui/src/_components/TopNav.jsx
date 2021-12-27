@@ -5,6 +5,7 @@ import { Menu as MenuIcon, AccountCircle as UserIcon } from '@mui/icons-material
 import { useHistory } from 'react-router-dom';
 
 function TopNav({ toggle, open }) {
+  const history = useHistory()
   return (
     <Box sx={{ flexGrow: 1 }}>
       <PersistentAppBar open={open}>
@@ -25,6 +26,7 @@ function TopNav({ toggle, open }) {
             edge="end"
             color="primary"
             aria-label="user"
+            onClick={() => history.push('/profile')}
           >
             <UserIcon />
           </IconButton>
