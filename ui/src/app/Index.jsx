@@ -37,7 +37,7 @@ function App() {
         </Box>
       )}
       {!(user && Object.keys(user).length) && (
-        <Box sx={{ marginTop: '4%', px: '30%' }}>
+        <Box sx={{ marginTop: '6%', px: '30%' }}>
           <TopNavPublic />
           <Box>
             <Alert />

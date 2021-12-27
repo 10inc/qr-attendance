@@ -1,8 +1,7 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import { Paper, Box, Button, TextField } from '@mui/material';
+import { AppBar, Paper, Box, Button, TextField } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 
 import { accountService, alertService } from '@/_services';
@@ -51,65 +50,68 @@ function Register({ history }) {
   });
 
   return (
-    <Paper>
-      <Box sx={{ p: 2 }}>
-        <form onSubmit={formik.handleSubmit}>
-          <h1>Register</h1>
+    <React.Fragment>
+      <AppBar sx={{ position: "relative", p: 2 }} >
+        <h2>Register</h2>
+      </AppBar>
+      <Paper>
+        <Box sx={{ py: 2, px: 6 }}>
+          <form onSubmit={formik.handleSubmit}>
+            <Box>
+              {['name', 'email'].map((item) =>
+                <p>
+                  <TextField
+                    key={item}
+                    fullWidth
+                    id={item}
+                    name={item}
+                    label={item.charAt(0).toUpperCase() + item.slice(1)}
+                    value={formik.values[item]}
+                    onChange={formik.handleChange}
+                    error={Boolean(formik.errors[item])}
+                    helperText={formik.errors[item]}
+                    type='text'
+                  />
+                </p>
+              )}
+            </Box>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+              {['password', 'confirmPassword'].map((item) =>
+                <TextField
+                  key={item}
+                  id={item}
+                  name={item}
+                  label={item.charAt(0).toUpperCase() + item.slice(1)}
+                  value={formik.values[item]}
+                  onChange={formik.handleChange}
+                  error={Boolean(formik.errors[item])}
+                  helperText={formik.errors[item]}
+                  type='password'
+                  sx={{ width: '48%' }}
+                />
+              )}
+            </Box>
 
-          <Box>
-            {['name', 'email'].map((item) =>
-              <TextField
-                key={item}
-                fullWidth
-                id={item}
-                name={item}
-                label={item.charAt(0).toUpperCase() + item.slice(1)}
-                value={formik.values[item]}
-                onChange={formik.handleChange}
-                error={Boolean(formik.errors[item])}
-                helperText={formik.errors[item]}
-                type='text'
-                sx={{ m: 1, width: '25ch' }}
-              />
-            )}
-          </Box>
-          <Box>
-            {['password', 'confirmPassword'].map((item) =>
-              <TextField
-                key={item}
-                fullWidth
-                id={item}
-                name={item}
-                label={item.charAt(0).toUpperCase() + item.slice(1)}
-                value={formik.values[item]}
-                onChange={formik.handleChange}
-                error={Boolean(formik.errors[item])}
-                helperText={formik.errors[item]}
-                type='password'
-                sx={{ m: 1, width: '25ch' }}
-              />
-            )}
-          </Box>
-
-          <Box sx={{ mt: 1 }}>
-            <LoadingButton
-              variant="contained"
-              loading={formik.isSubmitting}
-              type="submit"
-            >
-              Save
-            </LoadingButton>
-            <Button
-              variant="outlined"
-              onClick={() => history.push('/account/login')}
-              sx={{ ml: 1 }}
-            >
-              Back
-            </Button>
-          </Box>
-        </form>
-      </Box>
-    </Paper>
+            <Box sx={{ mt: 4 }}>
+              <LoadingButton
+                variant="contained"
+                loading={formik.isSubmitting}
+                type="submit"
+              >
+                Register
+              </LoadingButton>
+              <Button
+                variant="outlined"
+                onClick={() => history.push('/account/login')}
+                sx={{ ml: 1 }}
+              >
+                Back
+              </Button>
+            </Box>
+          </form>
+        </Box>
+      </Paper>
+    </React.Fragment>
   )
 }
 
