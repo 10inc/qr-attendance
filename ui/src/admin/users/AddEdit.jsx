@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import { 
+import {
   Paper, Box, Button, TextField, CircularProgress,
   FormControl, FormHelperText, InputLabel, Select, MenuItem
 } from '@mui/material';
@@ -147,9 +147,11 @@ function AddEdit({ history, match }) {
               />
             )}
           </Box>
-          <Box>
-            <small>NOTE: Leave password as blank to retain previous values.</small>
-          </Box>
+          {!isAddMode && (
+            <Box>
+              <small>NOTE: Leave password as blank to retain previous values.</small>
+            </Box>
+          )}
           <Box sx={{ mt: 1 }}>
             <LoadingButton
               variant="contained"

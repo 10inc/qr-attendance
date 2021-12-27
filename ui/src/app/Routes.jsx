@@ -1,7 +1,7 @@
 import React from 'react';
 import { Route, Switch, Redirect, useLocation } from 'react-router-dom';
 import { Role } from '@/_helpers';
-import { Home, AdminHome } from '@/home';
+import { Home } from '@/home';
 import { Profile } from '@/profile';
 import { Admin } from '@/admin';
 import { Account } from '@/account';
@@ -14,7 +14,6 @@ export function Routes() {
   return (
     <Switch>
       <Redirect from="/:url*(/+)" to={pathname.slice(0, -1)} />
-      <PrivateRoute exact path="/" roles={[Role.Admin]} component={AdminHome} />
       <PrivateRoute exact path="/" component={Home} />
       <PrivateRoute path="/profile" component={Profile} />
       <PrivateRoute path="/admin" roles={[Role.Admin]} component={Admin} />
