@@ -43,9 +43,18 @@ function RequireAuth() {
 }
 
 export default function App() {
+  const theme = {
+    ...DefaultTheme,
+    colors: {
+      ...DefaultTheme.colors,
+      primary: '#009c85'
+    },
+  };
+
+
   return (
     <SafeAreaProvider initialMetrics={initialWindowMetrics}>
-      <PaperProvider theme={DefaultTheme}>
+      <PaperProvider theme={theme}>
         <ToastProvider>
           <AuthProvider>
             <Main />

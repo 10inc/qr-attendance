@@ -1,22 +1,31 @@
-import React, {useState, useEffect} from 'react';
-import {View, StyleSheet} from 'react-native';
-import {Appbar, List} from 'react-native-paper';
-import {useNavigate} from 'react-router-native';
+import React, { useState, useEffect } from 'react';
+import { View, StyleSheet } from 'react-native';
+import { Appbar, List, Card, Title, ActivityIndicator } from 'react-native-paper';
+import { useToast } from 'react-native-paper-toast';
+import { useNavigate } from 'react-router-native';
 
-import {eventService} from '../api/events';
+import { eventService } from '../api/events';
 
-import {useAuth} from '../auth';
+import { useAuth } from '../auth';
 
 const Dashboard = () => {
-  const {signOut} = useAuth();
+  const { signOut } = useAuth();
   const navigate = useNavigate();
+  const toaster = useToast();
   const [events, setEvents] = useState([]);
+  const [loader, setLoader] = useState(true);
 
   useEffect(() => {
-    eventService.getAll().then(res => {
-      console.log(res);
-      setEvents(res);
-    });
+    eventService.getAll()
+      .then(res => {
+        console.log(res);
+        setEvents(res);
+        setLoader(false);
+      })
+      .catch(() => {
+        toaster.show({ message: "Session Expired", duration: 2000 })
+        signOut()
+      })
   }, []);
   // TODO: Add useMemo for events
 
@@ -27,20 +36,31 @@ const Dashboard = () => {
         <Appbar.Action icon="logout" onPress={signOut} />
       </Appbar>
 
-      <List.Section>
-        {/* TODO: Add loader */}
-        <List.Subheader>Events</List.Subheader>
-        {events.map(event => {
-          return (
-            <List.Item
-              key={event.id}
-              title={event.name}
-              description={event.date}
-              onPress={() => navigate('/event', {state: {event: event}})}
-            />
-          );
-        })}
-      </List.Section>
+
+      <Card style={styles.events}>
+        <Card.Content>
+          <Title>Events</Title>
+        </Card.Content>
+
+        <Card.Content>
+          {loader && <ActivityIndicator size="large" />}
+          {!loader && (
+            <List.Section>
+              {/* TODO: Add loader */}
+              {events.map(event => {
+                return (
+                  <List.Item
+                    key={event.id}
+                    title={event.name}
+                    description={new Date(event.date).toLocaleDateString("fr-CA")}
+                    onPress={() => navigate('/event', { state: { event: event } })}
+                  />
+                );
+              })}
+            </List.Section>
+          )}
+        </Card.Content>
+      </Card>
     </View>
   );
 };
@@ -55,4 +75,7 @@ const styles = StyleSheet.create({
     display: 'flex',
     justifyContent: 'flex-end',
   },
+  events: {
+    margin: 24,
+  }
 });

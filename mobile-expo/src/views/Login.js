@@ -1,10 +1,10 @@
 import React from 'react';
-import {useToast} from 'react-native-paper-toast';
-import {TextInput} from 'react-native-paper';
-import {Text, View, Button} from 'react-native';
-import {useNavigate} from 'react-router-native';
+import { StyleSheet } from 'react-native';
+import { useToast } from 'react-native-paper-toast';
+import { Surface, Button, Title, TextInput } from 'react-native-paper';
+import { useNavigate } from 'react-router-native';
 
-import {useAuth} from '../auth';
+import { useAuth } from '../auth';
 
 const Login = () => {
   const toaster = useToast();
@@ -16,8 +16,12 @@ const Login = () => {
 
   const handleLogin = () => {
     signIn(email, password)
-      .then(toaster.show({message: 'Login successful', duration: 2000}))
-      .catch(toaster.show({message: 'Login successful', duration: 2000}));
+      .then((res) => {
+        toaster.show({ message: "Login Successful", duration: 2000, type:"success" })
+      })
+      .catch((err) => {
+        toaster.show({ message: JSON.stringify(err), duration: 2000, type: 'error'})
+      });
   };
 
   // Tech Debt: useContext and useMemo should re-render... this is a quick fix
@@ -29,25 +33,50 @@ const Login = () => {
   }, [userToken, navigate]);
 
   return (
-    <View>
+    <Surface style={styles.surface}>
+      <Title>Student Seminar QR System</Title>
       <TextInput
         label="Email"
         value={email}
         onChangeText={value => setEmail(value)}
+        style={styles.input}
       />
       <TextInput
         placeholder="Password"
         secureTextEntry={true}
         onChangeText={value => setPassword(value)}
+        style={styles.input}
       />
-      <Text>status : {status}</Text>
-      <Text>userToken : {userToken ? userToken : 'null'}</Text>
-      <View>
-        <Button title="Log IN" onPress={handleLogin} />
-        <Button title="Log Out" onPress={signOut} />
-      </View>
-    </View>
+
+      <Button
+        mode="contained"
+        onPress={handleLogin}
+        style={styles.button}
+      >
+        Log In
+      </Button>
+    </Surface>
   );
 };
+
+const styles = StyleSheet.create({
+  surface: {
+    paddingTop: 96,
+    paddingLeft: 24,
+    paddingRight: 24,
+    display: 'flex',
+    alignItems: 'center',
+    height: '100%',
+  },
+  input: {
+    width: '100%',
+    margin: 8,
+  },
+  button: {
+    width: '100%',
+    margin: 8,
+    padding: 4,
+  }
+});
 
 export default Login;

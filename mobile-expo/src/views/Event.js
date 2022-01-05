@@ -1,20 +1,22 @@
-import React, {useState, useEffect} from 'react';
-import {View, StyleSheet, Button, Dimensions} from 'react-native';
-import {Appbar, Text, Card, Title, Paragraph} from 'react-native-paper';
-import {useLocation, useNavigate} from 'react-router-native';
+import React, { useState, useEffect } from 'react';
+import { View, StyleSheet, Dimensions } from 'react-native';
+import { Appbar, Text, Card, Button, Title, Paragraph, ActivityIndicator} from 'react-native-paper';
+import { useLocation, useNavigate } from 'react-router-native';
+import {useToast} from 'react-native-paper-toast';
 
 import { BarCodeScanner } from 'expo-barcode-scanner';
 
-import {eventService} from '../api/events';
+import { eventService } from '../api/events';
 
-import {useAuth} from '../auth';
+import { useAuth } from '../auth';
 
 const Event = () => {
   const {signOut} = useAuth();
   const navigate = useNavigate();
   const {state} = useLocation();
+  const toaster = useToast();
   const [hasPermission, setHasPermission] = useState(null);
-  const [scanned, setScanned] = useState(false);
+  const [scanner, setScanner] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -24,13 +26,23 @@ const Event = () => {
   }, []);
 
   const handleBarCodeScanned = ({ type, data }) => {
-    setScanned(true);
-    alert(`Bar code with type ${type} and data ${data} has been scanned!`);
-    eventService.attend(state.event.id, data)
+    setScanner(false);
+    if (type === '256' || type === 256) {
+      eventService.attend(state.event.id, data)
+        .then(() => {
+          toaster.show({ message: "Successfully scanned QR code", duration: 2000, type: 'success' })
+        })
+        .catch((err) => {
+          toaster.show({ message: JSON.stringify(err), duration: 2000, type: 'error' })
+        })
+    } else {
+      toaster.show({ message: "Scanned item is not a QR code", duration: 2000, type: 'error' })
+    }
   };
 
   if (hasPermission === null) {
-    return <Text>Requesting for camera permission</Text>;
+    // Requesting for camera permission
+    return <ActivityIndicator size="large" />
   }
 
   if (hasPermission === false) {
@@ -47,20 +59,34 @@ const Event = () => {
         <Appbar.Action icon="logout" onPress={signOut} />
       </Appbar>
 
+      <Card style={styles.scannerCard} elevation={4}>
+        <View style={styles.scannerContainer}>
+          {scanner && (
+            <BarCodeScanner
+              onBarCodeScanned={scanner ? handleBarCodeScanned : undefined}
+              style={styles.scanner}
+            />
+          )}
+          {!scanner && (
+            <Button labelStyle={{ fontSize: 108 }} icon="qrcode-scan"></Button>
+          )}
+        </View>
+      </Card>
 
-      <Card>
+      <Card style={styles.details} elevation={4}>
         <Card.Content>
           <Title>{state.event.name}</Title>
-          <Paragraph>{state.event.date}</Paragraph>
+          <Paragraph>{new Date(state.event.date).toLocaleDateString("fr-CA")}</Paragraph>
+          {!scanner && (
+            <Button
+              mode="contained"
+              onPress={() => setScanner(true)}
+            >
+              Start Scan
+            </Button>
+          )}
         </Card.Content>
       </Card>
-      <View style={styles.scannerContainer}>
-        <BarCodeScanner
-          onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
-          style={styles.scanner}
-        />
-        {scanned && <Button title={'Tap to Scan Again'} onPress={() => setScanned(false)} />}
-      </View>
     </View>
   );
 };
@@ -78,14 +104,19 @@ const styles = StyleSheet.create({
   fullWidth: {
     width: '100%',
   },
+  scannerCard: {
+    margin: 24
+  },
   scannerContainer: {
-    flex: 1,
-    flexDirection: 'column',
+    alignItems: 'center',
     justifyContent: 'center',
-    position: 'relative',
+    height: Dimensions.get('screen').height*.60,
   },
   scanner: {
-    height: Dimensions.get('screen').height/2,
-    width: Dimensions.get('screen').width,
+    height: "75%",
+    width: "60%",
   },
+  details: {
+    height: Dimensions.get('screen').height * .30
+  }
 });
