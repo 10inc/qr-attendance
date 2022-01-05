@@ -45,10 +45,12 @@ Database
 - MongoDB: https://www.mongodb.com/try/download/community
 - Mongoose: https://mongoosejs.com/
 
-Mobile Development with ReactNative
+Mobile Development
 - ReactNative (v17.0.2): https://reactnative.dev/
 - ReactNative Camera: https://www.npmjs.com/package/react-native-camera
 - ReactNative QR Code Scanner: https://www.npmjs.com/package/react-native-qrcode-scanner
+- Expo: https://expo.dev/
+- ReactNative Paper: https://reactnativepaper.com/
 
 Hosting with Heroku
 - Heroku: https://heroku.com
