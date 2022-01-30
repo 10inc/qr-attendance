@@ -26,7 +26,7 @@ function Account({ history, match }) {
                     <div className="card m-3">
                         <Switch>
                             <Route path={`${path}/login`} component={Login} />
-                            {process.env.FF_REGISTRATION !== 'false' &&
+                            {(process.env.FF_REGISTRATION !== 'false' || process.env.FF_REGISTRATION !== false) &&
                                 <Route path={`${path}/register`} component={Register} />
                             }
                             <Route path={`${path}/verify-email`} component={VerifyEmail} />
