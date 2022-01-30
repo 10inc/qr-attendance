@@ -91,7 +91,6 @@ function Login({ history, location }) {
                 >
                   Login
                 </LoadingButton>
-                {Boolean(process.env.FF_REGISTRATION)}
                 {!Boolean(process.env.FF_REGISTRATION) &&
                   <Button
                     variant="outlined"
