@@ -91,13 +91,15 @@ function Login({ history, location }) {
                 >
                   Login
                 </LoadingButton>
-                <Button
-                  variant="outlined"
-                  onClick={() => history.push('/account/register')}
-                  sx={{ ml: 1 }}
-                >
-                  Register
-                </Button>
+                {process.env.FF_REGISTRATION !== 'false' &&
+                  <Button
+                    variant="outlined"
+                    onClick={() => history.push('/account/register')}
+                    sx={{ ml: 1 }}
+                  >
+                    Register
+                  </Button>
+                }
               </Box>
               <Button
                 variant="outlined"
