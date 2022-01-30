@@ -99,8 +99,8 @@ export function SideBar({ open, toggle }) {
             <ListItemIcon>
               <LogoutIcon color="inherit" />
             </ListItemIcon>
-            <ListItemText>
-              <a onClick={accountService.logout}>Logout</a>
+            <ListItemText onClick={accountService.logout}>
+              <a>Logout</a>
             </ListItemText>
           </ListItem>
         </List>
