@@ -21,7 +21,7 @@ router.post('/', authorize(Role.Admin), createSchema, create);
 router.put('/:id', authorize(), updateSchema, update);
 router.delete('/:id', authorize(), _delete);
 
-if (process.env.FF_REGISTRATION !== 'false' || process.env.FF_REGISTRATION !== false) {
+if (!Boolean(process.env.FF_REGISTRATION)) {
     router.post('/register', registerSchema, register);
 }
 

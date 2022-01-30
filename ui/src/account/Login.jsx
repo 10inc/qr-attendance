@@ -91,7 +91,8 @@ function Login({ history, location }) {
                 >
                   Login
                 </LoadingButton>
-                {(process.env.FF_REGISTRATION !== 'false' || process.env.FF_REGISTRATION !== false )&&
+                {Boolean(process.env.FF_REGISTRATION)}
+                {!Boolean(process.env.FF_REGISTRATION) &&
                   <Button
                     variant="outlined"
                     onClick={() => history.push('/account/register')}
