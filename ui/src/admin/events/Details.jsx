@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import {
   Paper, Box, Button, Grid, CircularProgress,
-  FormControl, InputLabel, Select, MenuItem
+  FormControl, InputLabel, Select, MenuItem,
+  Table, TableHead, TableRow, TableCell, TableBody
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import { useSnackbar } from 'notistack';
 
 import { eventService, studentService } from '@/_services';
+import { TableActions } from '@/_components';
 
 function Details({ match }) {
   const { params: { id } } = match;
@@ -98,6 +100,45 @@ function Details({ match }) {
           </Box>
         </Grid>
 
+        <Grid item xs={12}>
+          <Box sx={{ p: 2 }}>
+            <h1>Attendees</h1>
+            {/* TECH DEBT: We can separate this table into its own component as it is used twice */}
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>Name</TableCell>
+                  <TableCell>Email</TableCell>
+                  <TableCell>Section</TableCell>
+                  <TableCell>Course</TableCell>
+                  <TableCell>Year</TableCell>
+                  <TableCell></TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {event?.attendees && event?.attendees.map(student =>
+                  <TableRow key={student.id}>
+                    <TableCell>{student.name}</TableCell>
+                    <TableCell>{student.email}</TableCell>
+                    <TableCell>{student.section}</TableCell>
+                    <TableCell>{student.course}</TableCell>
+                    <TableCell>{student.year}</TableCell>
+                    <TableCell>
+                      <TableActions actions={{
+                        show: {
+                          handle: () => history.push(`${path}/${student.id}`)
+                        },
+                        edit: {
+                          handle: () => history.push(`${path}/edit/${student.id}`)
+                        }
+                      }} />
+                    </TableCell>
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </Box>
+        </Grid>
       </Grid>
     </Paper>
   )

@@ -20,7 +20,7 @@ async function getAll() {
 }
 
 async function getById(id) {
-    const event = await db.Event.findById(id);
+    const event = await db.Event.findById(id).populate('attendees');
     return event;
 }
 
