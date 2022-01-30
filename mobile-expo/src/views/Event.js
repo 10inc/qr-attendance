@@ -67,6 +67,9 @@ const Event = () => {
               style={styles.scanner}
             />
           )}
+          {scanner && (
+            <Button labelStyle={{ fontSize: 124 }} style={styles.scannerCrop} icon="crop-free"></Button>
+          )}
           {!scanner && (
             <Button labelStyle={{ fontSize: 108 }} icon="qrcode-scan"></Button>
           )}
@@ -111,10 +114,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     height: Dimensions.get('screen').height*.60,
+    position: 'relative',
   },
   scanner: {
+    position: 'absolute',
     height: "75%",
     width: "60%",
+  },
+  scannerCrop: {
+    marginLeft: 20,
   },
   details: {
     height: Dimensions.get('screen').height * .30

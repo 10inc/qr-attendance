@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet } from 'react-native';
+import { View, StyleSheet, Image } from 'react-native';
 import { useToast } from 'react-native-paper-toast';
 import { Surface, Button, Title, TextInput } from 'react-native-paper';
 import { useNavigate } from 'react-router-native';
@@ -34,6 +34,9 @@ const Login = () => {
 
   return (
     <Surface style={styles.surface}>
+      <View style={styles.logo}>
+        <Image source={require('../assets/logo.png')} />
+      </View>
       <Title>Student Seminar QR System</Title>
       <TextInput
         label="Email"
@@ -76,6 +79,12 @@ const styles = StyleSheet.create({
     width: '100%',
     margin: 8,
     padding: 4,
+  },
+  logo: {
+    backgroundColor: '#009c85',
+    borderRadius: 16,
+    padding: 8,
+    marginBottom: 8,
   }
 });
 
