@@ -46,6 +46,7 @@ function Details({ match }) {
               <strong>Name: </strong> {student?.name}<br />
               <strong>Email: </strong> {student?.email}<br />
               <strong>Section: </strong> {student?.section}<br />
+              <strong>Course: </strong> {student?.course}<br />
               <strong>Year: </strong> {student?.year}
             </p>
             <Button

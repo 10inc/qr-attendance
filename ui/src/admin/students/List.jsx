@@ -54,6 +54,7 @@ function List({ match }) {
               <TableCell>Name</TableCell>
               <TableCell>Email</TableCell>
               <TableCell>Section</TableCell>
+              <TableCell>Course</TableCell>
               <TableCell>Year</TableCell>
               <TableCell></TableCell>
             </TableRow>
@@ -64,6 +65,7 @@ function List({ match }) {
                 <TableCell>{student.name}</TableCell>
                 <TableCell>{student.email}</TableCell>
                 <TableCell>{student.section}</TableCell>
+                <TableCell>{student.course}</TableCell>
                 <TableCell>{student.year}</TableCell>
                 <TableCell>
                   <TableActions actions={{

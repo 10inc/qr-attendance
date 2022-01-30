@@ -17,6 +17,7 @@ function AddEdit({ history, match }) {
     name: '',
     email: '',
     section: '',
+    course: '',
     year: '',
   };
 
@@ -28,6 +29,8 @@ function AddEdit({ history, match }) {
       .required('Email is required'),
     section: Yup.string()
       .required('Section is required'),
+    course: Yup.string()
+      .required('Course is required'),
     year: Yup.string()
       .required('Year is required'),
   });
@@ -68,10 +71,11 @@ function AddEdit({ history, match }) {
   useEffect(() => {
     if (!isAddMode) {
       studentService.getById(id).then(student => {
-        const { name, email, section, year } = student
+        const { name, email, section, course, year } = student
         formik.setFieldValue('name', name, false)
         formik.setFieldValue('email', email, false)
         formik.setFieldValue('section', section, false)
+        formik.setFieldValue('course', course, false)
         formik.setFieldValue('year', year, false)
         setLoading(false)
       });
@@ -88,7 +92,7 @@ function AddEdit({ history, match }) {
           <h1>{isAddMode ? 'Add' : 'Update'} Student</h1>
 
           <Box>
-            {['name', 'email', 'section', 'year'].map((item) =>
+            {['name', 'email', 'section', 'course', 'year'].map((item) =>
               <TextField
                 key={item}
                 fullWidth

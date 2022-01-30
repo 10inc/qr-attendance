@@ -61,6 +61,7 @@ function createSchema(req, res, next) {
         name: Joi.string().required(),
         email: Joi.string().email().required(),
         section: Joi.string().required(),
+        course: Joi.string().required(),
         year: Joi.string().required()
     });
     validateRequest(req, next, schema);
@@ -71,6 +72,7 @@ function updateSchema(req, res, next) {
         name: Joi.string().empty(''),
         email: Joi.string().email().empty(''),
         section: Joi.string().empty(''),
+        course: Joi.string().required(),
         year: Joi.string().empty('')
     };
 
