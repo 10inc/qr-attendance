@@ -6,7 +6,8 @@ import {
   AccountCircleOutlined as UserIcon,
   AssignmentOutlined as AdminIcon,
   LeaderboardOutlined as AnalyticsIcon,
-  LogoutOutlined as LogoutIcon
+  LogoutOutlined as LogoutIcon,
+  GroupsOutlined as StudentsIcon
 } from '@mui/icons-material';
 import config from 'config';
 import { Role } from '@/_helpers';
@@ -26,6 +27,11 @@ export function SideBar({ open, toggle }) {
       text: "Admin",
       icon: <AdminIcon />,
       path: "/admin",
+      admin: true
+    }, {
+      text: "Students",
+      icon: <StudentsIcon />,
+      path: "/admin/students",
       admin: true
     }, {
       text: "Analytics",
