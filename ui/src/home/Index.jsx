@@ -56,7 +56,7 @@ function AdminHome() {
         <Grid item xs={4}>
           <Paper>
             <Box sx={{ p: 2, position: 'relative' }}>
-              <h2>{data?.events || '-'}</h2>
+              <h2>{data?.events?.length || '-'}</h2>
               <h3>Events Listed</h3>
               <EventIcon className="dashboard-icon" fontSize="large" />
             </Box>

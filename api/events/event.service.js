@@ -76,16 +76,24 @@ async function attend(id, student_id) {
 }
 
 async function getAnalytics() {
-    const events = await db.Event.countDocuments({})
+    // const events = await db.Event.countDocuments({})
+
+
+    const events = await db.Event.aggregate()
+        .group({
+            _id: "$name",
+            sum: { $sum: { '$size': '$attendees' } }
+        }
+    )
     const students = await db.Student.countDocuments({})
     const attendees = await db.Event.aggregate()
         .group({
             _id: '',
-            "total_attendees": { $sum: { '$size': '$attendees' } }
+            total_attendees: { $sum: { '$size': '$attendees' } }
         })
     return {
         events: events,
         students: students,
-        attendees: attendees[0]?.total_attendees // TECH DEBT
+        attendees: attendees[0]?.total_attendees, // TECH DEBT
     }
 }
